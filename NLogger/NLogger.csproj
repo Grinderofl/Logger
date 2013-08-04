@@ -39,11 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileLoggerAppender.cs" />
     <Compile Include="ILogAppender.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILoggerBase.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggingLevel.cs" />
+    <Compile Include="MemoryLoggerAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

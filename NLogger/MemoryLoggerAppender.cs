@@ -1,9 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NLogger
 {
-    public class Logger : ILogger
+    public class MemoryLoggerAppender : ILogAppender
     {
 
         #region Fields
@@ -13,38 +16,40 @@ namespace NLogger
         #endregion
 
 
-        #region Constructors and destructors
+        #region Properties
 
-        public Logger()
+        public LoggingLevel LogLevels { get; set; }
+        public long Queued { get { return _queue.Count; } }
+        public string LogPattern { get; set; }
+        public string Parameters { get; set; }
+
+        #endregion
+
+
+        #region Constructors and Destructors
+
+        public MemoryLoggerAppender()
         {
             _queue = new Queue<string>();
         }
 
         #endregion
-        
-
-        #region Properties
-
-        public LoggingLevel LogLevels { get; set; }
-
-        public IList<ILogAppender> Appenders { get; set; }
-        public ILogAppender Root { get; set; }
-        public long Queued { get { return _queue.Count; } }
-
-        #endregion
 
 
-        #region ILogger Implemented methods
-
-        public void Log(string message, LoggingLevel level)
+        public void Dispose()
         {
-            if((LogLevels & level) == level)
-                _queue.Enqueue(message);
+            _queue.Clear();
+            _queue = null;
         }
 
         public void Log(string message)
         {
-            Log(message, LoggingLevel.Info);
+            throw new NotImplementedException();
+        }
+
+        public void Log(string message, LoggingLevel level)
+        {
+            throw new NotImplementedException();
         }
 
         public void Log(string message, Exception exception)
@@ -106,25 +111,6 @@ namespace NLogger
         {
             throw new NotImplementedException();
         }
-
-        #endregion
-
-
-        #region IDisposable Implemented Methods
-
-        public void Dispose()
-        {
-            _queue.Clear();
-            _queue = null;
-        }
-
-        #endregion
-
-
-        #region Private methods
-
-        #endregion
-
 
     }
 }

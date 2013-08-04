@@ -5,10 +5,19 @@ namespace NLogger
 {
     public interface ILogger : ILoggerBase, IDisposable
     {
-        IEnumerable<ILogAppender> Appenders { get; set; }
+        /// <summary>
+        /// Logger appenders
+        /// </summary>
+        IList<ILogAppender> Appenders { get; set; }
 
+        /// <summary>
+        /// Logger root
+        /// </summary>
         ILogAppender Root { get; set; }
 
+        /// <summary>
+        /// Number of items in the queue
+        /// </summary>
         long Queued { get; }
     }
 }
