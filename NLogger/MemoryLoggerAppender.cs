@@ -11,7 +11,7 @@ namespace NLogger
 
         #region Fields
 
-        private Queue<string> _queue;
+        private Queue<LogItem> _queue;
 
         #endregion
 
@@ -30,7 +30,7 @@ namespace NLogger
 
         public MemoryLoggerAppender()
         {
-            _queue = new Queue<string>();
+            _queue = new Queue<LogItem>();
         }
 
         #endregion

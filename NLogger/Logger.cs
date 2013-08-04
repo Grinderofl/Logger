@@ -8,7 +8,7 @@ namespace NLogger
 
         #region Fields
 
-        private Queue<string> _queue;
+        private Queue<LogItem> _queue;
 
         #endregion
 
@@ -17,7 +17,8 @@ namespace NLogger
 
         public Logger()
         {
-            _queue = new Queue<string>();
+            _queue = new Queue<LogItem>();
+            Appenders = new List<ILogAppender>();
         }
 
         #endregion
@@ -30,82 +31,94 @@ namespace NLogger
         public IList<ILogAppender> Appenders { get; set; }
         public ILogAppender Root { get; set; }
         public long Queued { get { return _queue.Count; } }
+        public bool Debug { get; set; }
+
+        public LoggingLevel DefaultLoggingLevel { get; set; }
 
         #endregion
 
 
         #region ILogger Implemented methods
 
+        public void Log(string message, Exception exception, LoggingLevel level)
+        {
+            if ((LogLevels & level) == level)
+                _queue.Enqueue(new LogItem(message, exception));
+
+            for (var i = 0; i < Appenders.Count; i++)
+                if ((Appenders[i].LogLevels & level) == level)
+                    Appenders[i].Log(message, exception, level);
+            
+        }
+
+        #region Log overloads
+
         public void Log(string message, LoggingLevel level)
         {
-            if((LogLevels & level) == level)
-                _queue.Enqueue(message);
+            Log(message, null, level);
         }
 
         public void Log(string message)
         {
-            Log(message, LoggingLevel.Info);
+            Log(message, DefaultLoggingLevel);
         }
 
         public void Log(string message, Exception exception)
         {
-            throw new NotImplementedException();
+            Log(message, exception, DefaultLoggingLevel);
         }
-
-        public void Log(string message, Exception exception, LoggingLevel level)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void LogError(string message)
         {
-            throw new NotImplementedException();
+            Log(message, LoggingLevel.Error);
         }
 
         public void LogError(string message, Exception exception)
         {
-            throw new NotImplementedException();
+            Log(message, exception, LoggingLevel.Error);
         }
 
         public void LogWarning(string message)
         {
-            throw new NotImplementedException();
+            Log(message, LoggingLevel.Warn);
         }
 
         public void LogWarning(string message, Exception exception)
         {
-            throw new NotImplementedException();
+            Log(message, exception, LoggingLevel.Warn);
         }
 
         public void LogInfo(string message)
         {
-            throw new NotImplementedException();
+            Log(message, LoggingLevel.Info);
         }
 
         public void LogInfo(string message, Exception exception)
         {
-            throw new NotImplementedException();
+            Log(message, exception, LoggingLevel.Info);
         }
 
         public void LogDebug(string message)
         {
-            throw new NotImplementedException();
+            Log(message, LoggingLevel.Debug);
         }
 
         public void LogDebug(string message, Exception exception)
         {
-            throw new NotImplementedException();
+            Log(message, exception, LoggingLevel.Debug);
         }
 
         public void LogTrace(string message)
         {
-            throw new NotImplementedException();
+            Log(message, LoggingLevel.Trace);
         }
 
         public void LogTrace(string message, Exception exception)
         {
-            throw new NotImplementedException();
+            Log(message, exception, LoggingLevel.Trace);
         }
+
+        #endregion
 
         #endregion
 

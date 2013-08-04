@@ -19,5 +19,7 @@ namespace NLogger
         /// Number of items in the queue
         /// </summary>
         long Queued { get; }
+
+        bool Debug { get; set; }
     }
 }

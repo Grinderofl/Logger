@@ -9,7 +9,7 @@ namespace NLogger
     public class FileLoggerAppender : ILogAppender
     {
 
-        private Queue<string> _queue;
+        private Queue<LogItem> _queue;
 
         public LoggingLevel LogLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
@@ -18,7 +18,7 @@ namespace NLogger
 
         public FileLoggerAppender()
         {
-            _queue = new Queue<string>();
+            _queue = new Queue<LogItem>();
         }
 
         public void Dispose()
@@ -44,7 +44,7 @@ namespace NLogger
 
         public void Log(string message, Exception exception, LoggingLevel level)
         {
-            throw new NotImplementedException();
+            _queue.Enqueue(new LogItem(message, exception));
         }
 
         public void LogError(string message)

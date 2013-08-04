@@ -45,6 +45,7 @@
     <Compile Include="ILoggerBase.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggingLevel.cs" />
+    <Compile Include="LogItem.cs" />
     <Compile Include="MemoryLoggerAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

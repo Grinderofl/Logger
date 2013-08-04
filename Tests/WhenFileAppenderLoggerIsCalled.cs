@@ -1,3 +1,4 @@
+using System.Linq;
 using NLogger;
 using NUnit.Framework;
 
@@ -31,10 +32,13 @@ namespace Tests
         #region Tests
 
         [Test]
-        public void FileSizeIncreasesWhenLoggingIsPerformed()
+        public void FileAppenderQueueSizeIncreases()
         {
-            
+            _logger.Log("Appending a message", LoggingLevel.Error);
+            Assert.That(_logger.Appenders.First(x => x.GetType() == typeof(FileLoggerAppender)).Queued, Is.EqualTo(1));
         }
+
+
 
         #endregion
 
