@@ -8,19 +8,41 @@ using NUnit.Framework;
 namespace Tests
 {
     [TestFixture]
-    public class WhenLoggerLogIsCalled
+    public class WhenLoggerLogIsCalledWithLoggingLevelSetToDebug
     {
-        [Test]
-        public void LoggerQueueShouldBeIncreased()
+        private ILogger _logger;
+
+        [SetUp]
+        public void SetUp()
         {
-            ILogger logger = new Logger();
-            logger.Log("Logging a test case");
-            Assert.That(logger.Queued, Is.EqualTo(1));
+            _logger = new Logger {LogLevels = LoggingLevel.Debug};
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            _logger.Dispose();
+            _logger = null;
+        }
+
+        [Test]
+        public void LoggerQueueShouldBeIncreasedWithLogLevelSetToDebug()
+        {
+            _logger.Log("Logging a test case", LoggingLevel.Debug);
+            Assert.That(_logger.Queued, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void LoggerQueueShouldNotBeIncreasedWithLogLevelSetToInfo()
+        {
+            _logger.Log("Logging a test case", LoggingLevel.Info);
+            Assert.That(_logger.Queued, Is.EqualTo(0));
         }
     }
 
     public class Logger : ILogger
     {
+
         #region Constructors and destructors
 
         public Logger()
@@ -30,29 +52,47 @@ namespace Tests
 
         #endregion
 
+
         #region Fields
 
-        private readonly Queue<string> _queue;
+        private Queue<string> _queue;
 
         #endregion
 
+
         #region Properties
 
+        public LoggingLevel LogLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
 
         #endregion
 
-        #region Implemented methods
 
-        public void Log(string message)
+        #region ILogger Implemented methods
+
+        public void Log(string message, LoggingLevel level)
         {
             _queue.Enqueue(message);
         }
 
         #endregion
 
+
+        #region IDisposable Implemented Methods
+
+        public void Dispose()
+        {
+            _queue.Clear();
+            _queue = null;
+        }
+
+        #endregion
+
+
         #region Private methods
 
         #endregion
+
+
     }
 }
