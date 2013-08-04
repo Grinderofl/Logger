@@ -17,7 +17,8 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            _logger = new Logger {LoggingLevels = new[] {LoggingLevel.Debug}, DefaultLoggingLevel = LoggingLevel.Info};
+            _logger = new Logger() {DefaultLoggingLevel = LoggingLevel.Info};
+            _logger.Root.LoggingLevels = new[] {LoggingLevel.Debug};
         }
 
         [TearDown]

@@ -1,5 +1,6 @@
 using System.Linq;
 using NLogger;
+using NLogger.Appenders;
 using NUnit.Framework;
 
 namespace Tests
@@ -14,7 +15,8 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            _logger = new Logger { LoggingLevels = new[] {LoggingLevel.Debug} };
+            _logger = new Logger {DefaultLoggingLevel = LoggingLevel.Info};
+            _logger.Root.LoggingLevels = new[] { LoggingLevel.Debug };
             var fileLogger = new FileLoggerAppender {LoggingLevels = new[] {LoggingLevel.Error}};
             _logger.Appenders.Add(fileLogger);
         }
@@ -37,9 +39,7 @@ namespace Tests
             _logger.Log("Appending a message", LoggingLevel.Error);
             Assert.That(_logger.Appenders.First(x => x.GetType() == typeof(FileLoggerAppender)).Queued, Is.EqualTo(1));
         }
-
-
-
+        
         #endregion
 
     }

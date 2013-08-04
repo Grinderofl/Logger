@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NLogger.Appenders;
 
 namespace NLogger
 {
@@ -20,6 +21,14 @@ namespace NLogger
         /// </summary>
         long Queued { get; }
 
+        /// <summary>
+        /// Gets or sets debug mode
+        /// </summary>
         bool Debug { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default logging level
+        /// </summary>
+        LoggingLevel DefaultLoggingLevel { get; set; }
     }
 }

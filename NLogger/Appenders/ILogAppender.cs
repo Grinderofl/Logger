@@ -1,14 +1,13 @@
 using System;
-using System.Collections.Generic;
 
-namespace NLogger
+namespace NLogger.Appenders
 {
     public interface ILogAppender : ILoggerBase, IDisposable
     {
         /// <summary>
         /// Logging level
         /// </summary>
-        IList<LoggingLevel> LoggingLevels { get; set; }
+        LoggingLevel[] LoggingLevels { get; set; }
 
         /// <summary>
         /// Number of items in the log queue

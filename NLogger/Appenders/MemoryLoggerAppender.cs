@@ -1,10 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NLogger
+namespace NLogger.Appenders
 {
     public class MemoryLoggerAppender : ILogAppender
     {
@@ -18,7 +15,7 @@ namespace NLogger
 
         #region Properties
 
-        public IList<LoggingLevel> LoggingLevels { get; set; }
+        public LoggingLevel[] LoggingLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }

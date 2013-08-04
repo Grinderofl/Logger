@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -39,15 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileLoggerAppender.cs" />
-    <Compile Include="ILogAppender.cs" />
+    <Compile Include="Appenders\FileLoggerAppender.cs" />
+    <Compile Include="Appenders\ILogAppender.cs" />
+    <Compile Include="Appenders\MemoryLoggerAppender.cs" />
+    <Compile Include="Configuration\NLoggerConfiguration.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILoggerBase.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggingLevel.cs" />
     <Compile Include="LogItem.cs" />
-    <Compile Include="MemoryLoggerAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RootAppender.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

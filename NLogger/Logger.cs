@@ -1,23 +1,17 @@
 using System;
 using System.Collections.Generic;
+using NLogger.Appenders;
 
 namespace NLogger
 {
     public class Logger : ILogger
     {
 
-        #region Fields
-
-        private Queue<LogItem> _queue;
-
-        #endregion
-
-
         #region Constructors and destructors
 
         public Logger()
         {
-            _queue = new Queue<LogItem>();
+            Root = new RootAppender();
             Appenders = new List<ILogAppender>();
         }
 
@@ -26,11 +20,9 @@ namespace NLogger
 
         #region Properties
 
-        public IList<LoggingLevel> LoggingLevels { get; set; }
-
         public IList<ILogAppender> Appenders { get; set; }
         public ILogAppender Root { get; set; }
-        public long Queued { get { return _queue.Count; } }
+        public long Queued { get { return Root.Queued; } }
         public bool Debug { get; set; }
 
         public LoggingLevel DefaultLoggingLevel { get; set; }
@@ -42,13 +34,24 @@ namespace NLogger
 
         public void Log(string message, Exception exception, LoggingLevel level)
         {
-            if (LoggingLevels.Contains(level))
-                _queue.Enqueue(new LogItem(message, exception));
+            bool rootlevel = Root.LoggingLevels.Contains(level);
+
+            if (rootlevel)
+                Root.Log(message, exception, level);
 
             for (var i = 0; i < Appenders.Count; i++)
+            {
+                if (Appenders[i].LoggingLevels.Length == 0)
+                {
+                    if(rootlevel)
+                        Appenders[i].Log(message, exception, level);
+                    continue;
+                }
+
                 if ((Appenders[i].LoggingLevels.Contains(level)))
                     Appenders[i].Log(message, exception, level);
-            
+            }
+
         }
 
         #region Log overloads
@@ -127,8 +130,11 @@ namespace NLogger
 
         public void Dispose()
         {
-            _queue.Clear();
-            _queue = null;
+            Root.Dispose();
+            for(var i = 0; i < Appenders.Count; i++)
+                Appenders[i].Dispose();
+
+            Appenders = null;
         }
 
         #endregion

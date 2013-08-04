@@ -15,8 +15,19 @@ namespace NLogger
             Created = DateTime.UtcNow;
         }
 
+        /// <summary>
+        /// Message to log
+        /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Logging datetime
+        /// </summary>
         public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Exception to include with log
+        /// </summary>
         public Exception Exception { get; set; }
     }
 }
