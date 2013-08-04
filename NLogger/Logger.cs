@@ -1,18 +1,64 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using NLogger.Appenders;
+using NLogger.Configuration;
 
 namespace NLogger
 {
     public class Logger : ILogger
     {
-
         #region Constructors and destructors
 
         public Logger()
         {
             Root = new RootAppender();
             Appenders = new List<ILogAppender>();
+        }
+
+        public void Initialize()
+        {
+            var config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
+            if(config == null) throw new ConfigurationErrorsException("No configuration section found");
+            if (config.Root != null)
+            {
+                Root.LoggingLevels = GetLoggingLevels(config.Root);
+            }
+            foreach (NLoggerAppender item in config.Appenders)
+            {
+                ILogAppender appender;
+                if (item.Type.ToLower().Contains("fileappender"))
+                    appender = new FileLoggerAppender();
+                else
+                    appender = new MemoryLoggerAppender();
+
+                appender.LoggingLevels = GetLoggingLevels(item);
+                if (item.Pattern != null)
+                    appender.LogPattern = item.Pattern.Value;
+
+                Appenders.Add(appender);
+            }
+        }
+
+        private static LoggingLevel[] GetLoggingLevels(Configuration.RootAppender appender)
+        {
+            if(appender == null)
+                return new LoggingLevel[0];
+            var list = new List<LoggingLevel>();
+            if (appender.Level.Fatal)
+                list.Add(LoggingLevel.Fatal);
+            if (appender.Level.Error)
+                list.Add(LoggingLevel.Error);
+            if (appender.Level.Warning)
+                list.Add(LoggingLevel.Warning);
+            if (appender.Level.Debug)
+                list.Add(LoggingLevel.Debug);
+            if (appender.Level.Info)
+                list.Add(LoggingLevel.Info);
+            if (appender.Level.Trace)
+                list.Add(LoggingLevel.Trace);
+
+            return list.ToArray();
         }
 
         #endregion
@@ -54,6 +100,7 @@ namespace NLogger
 
         }
 
+        
         #region Log overloads
 
         public void Log(string message, LoggingLevel level)
@@ -70,7 +117,17 @@ namespace NLogger
         {
             Log(message, exception, DefaultLoggingLevel);
         }
-        
+
+        public void LogFatal(string message)
+        {
+            Log(message, LoggingLevel.Fatal);
+        }
+
+        public void LogFatal(string message, Exception exception)
+        {
+            Log(message, exception, LoggingLevel.Fatal);
+        }
+
         public void LogError(string message)
         {
             Log(message, LoggingLevel.Error);
@@ -83,12 +140,12 @@ namespace NLogger
 
         public void LogWarning(string message)
         {
-            Log(message, LoggingLevel.Warn);
+            Log(message, LoggingLevel.Warning);
         }
 
         public void LogWarning(string message, Exception exception)
         {
-            Log(message, exception, LoggingLevel.Warn);
+            Log(message, exception, LoggingLevel.Warning);
         }
 
         public void LogInfo(string message)
@@ -141,6 +198,11 @@ namespace NLogger
 
 
         #region Private methods
+
+        private LoggingLevel GetLoggingLevel(string value)
+        {
+            return (LoggingLevel) Enum.Parse(typeof (LoggingLevel), value);
+        }
 
         #endregion
 
