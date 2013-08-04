@@ -1,6 +1,6 @@
 using System;
 
-namespace Tests
+namespace NLogger
 {
     [Flags]
     public enum LoggingLevel : byte

@@ -1,6 +1,6 @@
 using System;
 
-namespace Tests
+namespace NLogger
 {
     public interface ILogAppender : IDisposable, ILoggerBase
     {
