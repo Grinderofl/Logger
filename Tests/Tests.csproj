@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILogAppender.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="ILoggerBase.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggingLevel.cs" />
     <Compile Include="WhenLoggerIsCalled.cs" />

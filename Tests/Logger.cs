@@ -27,10 +27,8 @@ namespace Tests
 
         public LoggingLevel LogLevels { get; set; }
 
-        public TimeSpan TimeBetweenLogs { get; set; }
-        public int WritesPerMinute { get; set; }
-        public LoggingType LoggingType { get; set; }
-
+        public IEnumerable<ILogAppender> Appenders { get; set; }
+        public ILogAppender Root { get; set; }
         public long Queued { get { return _queue.Count; } }
 
         #endregion
@@ -47,6 +45,66 @@ namespace Tests
         public void Log(string message)
         {
             Log(message, LoggingLevel.Info);
+        }
+
+        public void Log(string message, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Log(string message, Exception exception, LoggingLevel level)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogError(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogError(string message, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogWarning(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogWarning(string message, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogInfo(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogInfo(string message, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogDebug(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogDebug(string message, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogTrace(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogTrace(string message, Exception exception)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
