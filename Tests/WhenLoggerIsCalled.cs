@@ -19,10 +19,18 @@ namespace Tests
         }
     }
 
-    public interface ILogger
+    public class Logger : ILogger
     {
-        Queue<string> Queue { get; set; }
+        public Logger()
+        {
+            Queue = new Queue<string>();
+        }
 
-        void Log(string message);
+        public Queue<string> Queue { get; set; }
+        
+        public void Log(string message)
+        {
+            Queue.Enqueue(message);
+        }
     }
 }
