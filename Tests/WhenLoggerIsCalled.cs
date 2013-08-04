@@ -13,7 +13,16 @@ namespace Tests
         [Test]
         public void LoggerQueueShouldBeExtended()
         {
-            
+            ILogger logger = new Logger();
+            logger.Log("Logging a test case");
+            Assert.That(logger.Queue.Count, Is.GreaterThan(0));
         }
+    }
+
+    public interface ILogger
+    {
+        Queue<string> Queue { get; set; }
+
+        void Log(string message);
     }
 }
