@@ -4,7 +4,7 @@ namespace Tests
 {
     public interface ILogger
     {
-        Queue<string> Queue { get; set; }
+        long Queued { get; }
 
         void Log(string message);
     }

@@ -11,26 +11,48 @@ namespace Tests
     public class WhenLoggerLogIsCalled
     {
         [Test]
-        public void LoggerQueueShouldBeExtended()
+        public void LoggerQueueShouldBeIncreased()
         {
             ILogger logger = new Logger();
             logger.Log("Logging a test case");
-            Assert.That(logger.Queue.Count, Is.GreaterThan(0));
+            Assert.That(logger.Queued, Is.EqualTo(1));
         }
     }
 
     public class Logger : ILogger
     {
+        #region Constructors and destructors
+
         public Logger()
         {
-            Queue = new Queue<string>();
+            _queue = new Queue<string>();
         }
 
-        public Queue<string> Queue { get; set; }
-        
+        #endregion
+
+        #region Fields
+
+        private readonly Queue<string> _queue;
+
+        #endregion
+
+        #region Properties
+
+        public long Queued { get { return _queue.Count; } }
+
+        #endregion
+
+        #region Implemented methods
+
         public void Log(string message)
         {
-            Queue.Enqueue(message);
+            _queue.Enqueue(message);
         }
+
+        #endregion
+
+        #region Private methods
+
+        #endregion
     }
 }
