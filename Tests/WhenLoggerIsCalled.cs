@@ -72,7 +72,8 @@ namespace Tests
 
         public void Log(string message, LoggingLevel level)
         {
-            _queue.Enqueue(message);
+            if((LogLevels & level) == level)
+                _queue.Enqueue(message);
         }
 
         #endregion
