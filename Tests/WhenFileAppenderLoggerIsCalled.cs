@@ -14,8 +14,8 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            _logger = new Logger { LogLevels = LoggingLevel.Debug };
-            var fileLogger = new FileLoggerAppender {LogLevels = LoggingLevel.Error};
+            _logger = new Logger { LoggingLevels = new[] {LoggingLevel.Debug} };
+            var fileLogger = new FileLoggerAppender {LoggingLevels = new[] {LoggingLevel.Error}};
             _logger.Appenders.Add(fileLogger);
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NLogger
 {
@@ -7,7 +8,7 @@ namespace NLogger
         /// <summary>
         /// Logging level
         /// </summary>
-        LoggingLevel LogLevels { get; set; }
+        IList<LoggingLevel> LoggingLevels { get; set; }
 
         /// <summary>
         /// Number of items in the log queue

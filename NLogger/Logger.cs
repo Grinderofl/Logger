@@ -26,7 +26,7 @@ namespace NLogger
 
         #region Properties
 
-        public LoggingLevel LogLevels { get; set; }
+        public IList<LoggingLevel> LoggingLevels { get; set; }
 
         public IList<ILogAppender> Appenders { get; set; }
         public ILogAppender Root { get; set; }
@@ -42,11 +42,11 @@ namespace NLogger
 
         public void Log(string message, Exception exception, LoggingLevel level)
         {
-            if ((LogLevels & level) == level)
+            if (LoggingLevels.Contains(level))
                 _queue.Enqueue(new LogItem(message, exception));
 
             for (var i = 0; i < Appenders.Count; i++)
-                if ((Appenders[i].LogLevels & level) == level)
+                if ((Appenders[i].LoggingLevels.Contains(level)))
                     Appenders[i].Log(message, exception, level);
             
         }

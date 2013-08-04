@@ -18,7 +18,7 @@ namespace NLogger
 
         #region Properties
 
-        public LoggingLevel LogLevels { get; set; }
+        public IList<LoggingLevel> LoggingLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
