@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +10,8 @@ namespace Tests
     public class WhenLoggerLogIsCalledWithLoggingLevelSetToDebug
     {
         private ILogger _logger;
+
+        #region Setups and Teardowns
 
         [SetUp]
         public void SetUp()
@@ -25,6 +26,11 @@ namespace Tests
             _logger = null;
         }
 
+        #endregion
+
+
+        #region Tests
+
         [Test]
         public void LoggerQueueShouldBeIncreasedWithLogLevelSetToDebug()
         {
@@ -38,62 +44,15 @@ namespace Tests
             _logger.Log("Logging a test case", LoggingLevel.Info);
             Assert.That(_logger.Queued, Is.EqualTo(0));
         }
-    }
 
-    public class Logger : ILogger
-    {
-
-        #region Constructors and destructors
-
-        public Logger()
+        [Test]
+        public void LoggerQueueShouldNotBeIncreasedWithUnspecifiedLogLevel()
         {
-            _queue = new Queue<string>();
+            _logger.Log("Logging a test case");
+            Assert.That(_logger.Queued, Is.EqualTo(0));
         }
 
         #endregion
-
-
-        #region Fields
-
-        private Queue<string> _queue;
-
-        #endregion
-
-
-        #region Properties
-
-        public LoggingLevel LogLevels { get; set; }
-        public long Queued { get { return _queue.Count; } }
-
-        #endregion
-
-
-        #region ILogger Implemented methods
-
-        public void Log(string message, LoggingLevel level)
-        {
-            if((LogLevels & level) == level)
-                _queue.Enqueue(message);
-        }
-
-        #endregion
-
-
-        #region IDisposable Implemented Methods
-
-        public void Dispose()
-        {
-            _queue.Clear();
-            _queue = null;
-        }
-
-        #endregion
-
-
-        #region Private methods
-
-        #endregion
-
 
     }
 }
