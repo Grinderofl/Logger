@@ -46,7 +46,11 @@ namespace NLogger.Appenders
                     using (var fw = new StreamWriter(fs, new UTF8Encoding(), 256, true))
                         foreach (var item in logItems)
                         {
-                            var toWrite = string.Format("{0}", Logger.FormatLog(DefaultLogPattern, item));
+                            var toWrite = string.Format("{0}",
+                                                        Logger.FormatLog(
+                                                            string.IsNullOrEmpty(LogPattern)
+                                                                ? DefaultLogPattern
+                                                                : LogPattern, item));
                             fw.WriteLine(toWrite);
                         }
                     fs.Flush(true);

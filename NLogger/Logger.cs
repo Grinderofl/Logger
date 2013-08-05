@@ -41,6 +41,8 @@ namespace NLogger
                 ILogAppender appender;
                 if (item.Type.ToLower().Contains("fileloggerappender"))
                     appender = new FileLoggerAppender();
+                else if(item.Type.ToLower().Contains("consoleloggerappender"))
+                    appender = new ConsoleLoggerAppender();
                 else
                     appender = new MemoryLoggerAppender();
 
