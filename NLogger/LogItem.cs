@@ -8,11 +8,12 @@ namespace NLogger
 {
     public class LogItem
     {
-        public LogItem(string message, Exception exception = null)
+        public LogItem(string message, Exception exception = null, LoggingLevel level = LoggingLevel.Info)
         {
             Message = message;
             Exception = exception;
             Created = DateTime.UtcNow;
+            Level = level;
         }
 
         /// <summary>
@@ -29,5 +30,11 @@ namespace NLogger
         /// Exception to include with log
         /// </summary>
         public Exception Exception { get; set; }
+
+        /// <summary>
+        /// Logging level
+        /// </summary>
+        public LoggingLevel Level { get; set; }
+        
     }
 }

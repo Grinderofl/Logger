@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NLogger.Appenders
 {
@@ -23,5 +24,7 @@ namespace NLogger.Appenders
         /// Parameters for logging
         /// </summary>
         string Parameters { get; set; }
+
+        event Logger.LogWritten OnLogWritten;
     }
 }

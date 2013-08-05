@@ -36,10 +36,11 @@ namespace NLogger
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
+        public event Logger.LogWritten OnLogWritten;
 
         public void Log(string message, Exception exception, LoggingLevel level)
         {
-            _queue.Enqueue(new LogItem(message, exception));
+            _queue.Enqueue(new LogItem(message, exception, level));
         }
     }
 }

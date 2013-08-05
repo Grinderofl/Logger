@@ -20,6 +20,8 @@ namespace NLogger.Appenders
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
 
+        public event Logger.LogWritten OnLogWritten;
+
         #endregion
 
 
@@ -41,7 +43,7 @@ namespace NLogger.Appenders
 
         public void Log(string message, Exception exception, LoggingLevel level)
         {
-            _queue.Enqueue(new LogItem(message, exception));
+            _queue.Enqueue(new LogItem(message, exception, level));
         }
     }
 }

@@ -8,6 +8,18 @@ namespace NLogger
 {
     public class Logger : ILogger
     {
+
+        public static string FormatLog(string format, LogItem item)
+        {
+            return
+                format.Replace("%date", item.Created.ToString("yyyy/MM/dd HH:mm:ss.fffffff"))
+                      .Replace("%shortdate", item.Created.ToString("yyyy/MM/dd HH:mm:ss"))
+                      .Replace("%message", item.Message)
+                      .Replace("%level", item.Level.ToString());
+        }
+
+        public delegate void LogWritten(IList<LogItem> logItems);
+
         #region Constructors and destructors
 
         public Logger()
@@ -27,11 +39,12 @@ namespace NLogger
             foreach (NLoggerAppender item in config.Appenders)
             {
                 ILogAppender appender;
-                if (item.Type.ToLower().Contains("fileappender"))
+                if (item.Type.ToLower().Contains("fileloggerappender"))
                     appender = new FileLoggerAppender();
                 else
                     appender = new MemoryLoggerAppender();
 
+                appender.Parameters = item.Parameters;
                 appender.LoggingLevels = GetLoggingLevels(item);
                 if (item.Pattern != null)
                     appender.LogPattern = item.Pattern.Value;
