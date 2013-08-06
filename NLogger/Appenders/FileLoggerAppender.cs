@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -13,7 +14,7 @@ namespace NLogger.Appenders
     public class FileLoggerAppender : ILogAppender
     {
 
-        private Queue<LogItem> _queue;
+        private ConcurrentQueue<LogItem> _queue;
 
         private bool _disposing;
 
@@ -26,13 +27,47 @@ namespace NLogger.Appenders
 
         public event Logger.LogWritten OnLogWritten;
 
+        #region Alternate implementation
+
+        private Thread _loggerThread;
+
+        private void BeginLogWriter()
+        {
+            _loggerThread = new Thread(OnThreadStart);
+            _loggerThread.Start();
+        }
+
+        private void OnThreadStart()
+        {
+            do
+            {
+                Thread.Sleep(500);
+                if (_queue.Count < 100) continue;
+                if (OnLogWritten == null) continue;
+                var logItems = new List<LogItem>();
+                for (var i = 0; i < _queue.Count; i++)
+                {
+                    LogItem item;
+                    while (!_queue.TryDequeue(out item))
+                        Thread.Sleep(50);
+                    logItems.Add(item);
+                }
+                OnLogWritten(logItems);
+            } while (!_disposing);
+            _loggerThread.Abort();
+            _loggerThread = null;
+        }
+
+        #endregion
+
         public FileLoggerAppender()
         {
-            _queue = new Queue<LogItem>();
+            _queue = new ConcurrentQueue<LogItem>();
             OnLogWritten += DefaultLogWriter;
-            _worker = new BackgroundWorker();
+            BeginLogWriter();
+            /*_worker = new BackgroundWorker();
             _worker.DoWork += WorkerOnDoWork;
-            _worker.RunWorkerAsync();
+            _worker.RunWorkerAsync();*/
         }
         
         private void DefaultLogWriter(IList<LogItem> logItems)
@@ -59,13 +94,13 @@ namespace NLogger.Appenders
             catch (IOException e)
             {
                 if (!IsFileLocked(e))
-                {
-                    Thread.Sleep(2000);
-                    DefaultLogWriter(logItems);
-                }
+                    throw;
+                Thread.Sleep(2000);
+                DefaultLogWriter(logItems);
             }
         }
         
+        /*
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             do
@@ -78,7 +113,7 @@ namespace NLogger.Appenders
                     logItems.Add(_queue.Dequeue());
                 OnLogWritten(logItems);
             } while (!_disposing);
-        }
+        }*/
 
         private static bool IsFileLocked(IOException exception)
         {
@@ -92,7 +127,11 @@ namespace NLogger.Appenders
         public void Dispose()
         {
             _disposing = true;
-            _queue.Clear();
+            FinalizeDispose();
+        }
+
+        private void FinalizeDispose()
+        {
             _queue = null;
         }
 

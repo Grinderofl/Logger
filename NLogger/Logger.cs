@@ -28,7 +28,7 @@ namespace NLogger
             Appenders = new List<ILogAppender>();
         }
 
-        public void Initialize(NLoggerConfigurationSection config)
+        public ILogger Initialize(NLoggerConfigurationSection config)
         {
             if(config == null)
                 config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
@@ -54,6 +54,7 @@ namespace NLogger
 
                 Appenders.Add(appender);
             }
+            return this;
         }
 
         private static LoggingLevel[] GetLoggingLevels(Configuration.RootAppender appender)
