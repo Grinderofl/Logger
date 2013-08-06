@@ -23,7 +23,7 @@ namespace Tests
   <root>
     <level error=""true""/>
   </root>
-  <appender name=""FileAppender"" type=""NLogger.Appenders.FileLoggerAppender, NLogger"" parameters=""C:\BS\log.txt"">
+  <appender name=""FileAppender"" type=""NLogger.Appenders.FileLoggerAppender, NLogger"" parameters=""C:\BS\log.txt"" timesincelastwrite=""00:00:59"">
     <level info=""true""/>
     <pattern value=""%date %level %message""/>
   </appender>
@@ -52,6 +52,14 @@ namespace Tests
         public void LoggerFileAppenderPatternShouldBeCorrect()
         {
             Assert.That(_logger.Appenders.First(x => x.GetType() == typeof(FileLoggerAppender)).LogPattern, Is.EqualTo("%date %level %message"));
+        }
+
+        [Test]
+        public void LoggerFileAppenderTimeSinceLastWriteShouldBeCorrect()
+        {
+            Assert.That(
+                _logger.Appenders.First(x => x.GetType() == typeof (FileLoggerAppender)).TimeSinceLastWrite.Seconds,
+                Is.EqualTo(59));
         }
     }
 }
