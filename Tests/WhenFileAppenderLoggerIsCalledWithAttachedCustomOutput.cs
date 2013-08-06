@@ -50,7 +50,7 @@ namespace Tests
         public void CustomOutputShouldReceiveLoggedData()
         {
             for (int i = 0; i < 1500; i++)
-                _logger.LogInfo("Logging message " + i);
+                _logger.LogInfo("Logging message " + i, new Exception("Hello exception"));
             
 
             Wait();

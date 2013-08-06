@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using NLogger.Appenders;
 using NLogger.Configuration;
@@ -9,14 +10,48 @@ namespace NLogger
 {
     public class Logger : ILogger
     {
+        private static readonly Dictionary<string, Func<LogItem, string>> DefaultFormatting = new Dictionary
+            <string, Func<LogItem, string>>
+            {
+                {"%exception", x => x.Exception != null ? x.Exception.Message.Replace(Environment.NewLine, "") : ""},
+                {
+                    "%stacktrace",
+                    x =>
+                    x.Exception != null && x.Exception.StackTrace != null
+                        ? x.Exception.StackTrace.Replace(Environment.NewLine, "")
+                        : ""
+                },
+                {"%date", x => x.Created.ToString("yyyy/MM/dd HH:mm:ss.fffffff")},
+                {"%shortdate", x => x.Created.ToString("yyyy/MM/dd HH:mm:ss")},
+                {"%message", x => x.Message},
+                {"%level", x => x.Level.ToString()}
+            };
 
-        public static string FormatLog(string format, LogItem item)
+        public static string FormatLog(string format, LogItem item, Dictionary<string, Func<LogItem, string>> overrides = null)
         {
-            return
-                format.Replace("%date", item.Created.ToString("yyyy/MM/dd HH:mm:ss.fffffff"))
-                      .Replace("%shortdate", item.Created.ToString("yyyy/MM/dd HH:mm:ss"))
-                      .Replace("%message", item.Message)
-                      .Replace("%level", item.Level.ToString());
+            for (var i = 0; i < DefaultFormatting.Count; i++)
+            {
+                string replace;
+                var element = DefaultFormatting.ElementAt(i);
+
+                if (overrides != null)
+                {
+                    replace = overrides.ContainsKey(element.Key)
+                                  ? overrides[element.Key].Invoke(item)
+                                  : element.Value.Invoke(item);
+                    overrides.Remove(element.Key);
+                }
+                else
+                    replace = element.Value.Invoke(item);
+                format = format.Replace(element.Key, replace);
+
+            }
+
+            if (overrides != null)
+                foreach (var or in overrides)
+                    format = format.Replace(or.Key, or.Value.Invoke(item));
+            
+            return format;
         }
 
         public delegate void LogWritten(IList<LogItem> logItems);
@@ -44,13 +79,6 @@ namespace NLogger
                 var type = item.Type.Split(',');
                 var appender = (ILogAppender) Activator.CreateInstance(type[1].Trim(), type[0].Trim()).Unwrap();
 
-                /*if (item.Type.ToLower().Contains("fileloggerappender"))
-                    appender = new FileLoggerAppender();
-                else if (item.Type.ToLower().Contains("consoleloggerappender"))
-                    appender = new ConsoleLoggerAppender();
-                else
-                    appender = new MemoryLoggerAppender();
-                */
                 appender.Parameters = item.Parameters;
                 appender.LoggingLevels = GetLoggingLevels(item);
                 if (item.Pattern != null)

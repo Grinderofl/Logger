@@ -13,10 +13,25 @@ namespace NLogger.Appenders
 {
     public class FileLoggerAppender : ILogAppender
     {
+        #region Fields
 
         private ConcurrentQueue<LogItem> _queue;
 
         private bool _disposing;
+
+        private Thread _loggerThread;
+
+        #endregion
+
+
+        #region Constants
+
+        private const string DefaultLogPattern = "[%level] %date %message | %exception %stacktrace";
+
+        #endregion
+
+
+        #region Properties
 
         public LoggingLevel[] LoggingLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
@@ -24,13 +39,52 @@ namespace NLogger.Appenders
         public string Parameters { get; set; }
         public TimeSpan TimeSinceLastWrite { get; set; }
 
-        private const string DefaultLogPattern = "[%level] %date %message";
+        #endregion
+
+
+        #region Events
 
         public event Logger.LogWritten OnLogWritten;
 
-        #region Alternate implementation
+        #endregion
 
-        private Thread _loggerThread;
+
+        #region Constructors and destructors
+
+        public FileLoggerAppender()
+        {
+            _queue = new ConcurrentQueue<LogItem>();
+            OnLogWritten += DefaultLogWriter;
+            BeginLogWriter();
+        }
+
+        #endregion
+
+
+        #region ILogAppender method implementations
+
+        public void Log(string message, Exception exception, LoggingLevel level)
+        {
+            _queue.Enqueue(new LogItem(message, exception, level));
+        }
+
+        #endregion
+
+
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            _disposing = true;
+            FinalizeDispose();
+        }
+
+        #endregion
+
+
+        #region Private methods
+
+        #region Alternate implementation
 
         private void BeginLogWriter()
         {
@@ -62,16 +116,6 @@ namespace NLogger.Appenders
 
         #endregion
 
-        public FileLoggerAppender()
-        {
-            _queue = new ConcurrentQueue<LogItem>();
-            OnLogWritten += DefaultLogWriter;
-            BeginLogWriter();
-            /*_worker = new BackgroundWorker();
-            _worker.DoWork += WorkerOnDoWork;
-            _worker.RunWorkerAsync();*/
-        }
-        
         private void DefaultLogWriter(IList<LogItem> logItems)
         {
             try
@@ -101,21 +145,11 @@ namespace NLogger.Appenders
                 DefaultLogWriter(logItems);
             }
         }
-        
-        /*
-        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+
+        private void FinalizeDispose()
         {
-            do
-            {
-                Thread.Sleep(500);
-                if (_queue.Count < 100) continue;
-                if (OnLogWritten == null) continue;
-                var logItems = new List<LogItem>();
-                for (var i = 0; i < _queue.Count; i++)
-                    logItems.Add(_queue.Dequeue());
-                OnLogWritten(logItems);
-            } while (!_disposing);
-        }*/
+            _queue = null;
+        }
 
         private static bool IsFileLocked(IOException exception)
         {
@@ -123,24 +157,7 @@ namespace NLogger.Appenders
             return errorCode == 32 || errorCode == 33;
         }
 
-        //private readonly BackgroundWorker _worker;
+        #endregion
 
-
-        public void Dispose()
-        {
-            _disposing = true;
-            FinalizeDispose();
-        }
-
-        private void FinalizeDispose()
-        {
-            _queue = null;
-        }
-
-        public void Log(string message, Exception exception, LoggingLevel level)
-        {
-            _queue.Enqueue(new LogItem(message, exception, level));
-        }
-        
     }
 }
