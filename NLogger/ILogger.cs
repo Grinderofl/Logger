@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NLogger.Appenders;
+using NLogger.Configuration;
 
 namespace NLogger
 {
@@ -34,7 +35,8 @@ namespace NLogger
         /// <summary>
         /// Initializes the class and loads settings from configuration file
         /// </summary>
-        void Initialize();
+        /// <param name="configurationSection">Custom configuration section</param>
+        void Initialize(NLoggerConfigurationSection configurationSection = null);
 
 
         /// <summary>

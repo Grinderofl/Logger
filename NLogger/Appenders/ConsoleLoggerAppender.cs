@@ -17,7 +17,7 @@ namespace NLogger.Appenders
 
         public void Dispose()
         {
-            
+
         }
 
         private const string DefaultLogPattern = "[%date][%level] %message";

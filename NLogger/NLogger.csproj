@@ -49,6 +49,7 @@
     <Compile Include="Configuration\NLoggerAppenderLevel.cs" />
     <Compile Include="Configuration\NLoggerAppenderPattern.cs" />
     <Compile Include="Configuration\NLoggerConfiguration.cs" />
+    <Compile Include="Configuration\NLoggerConfigurationSectionXmlLoader.cs" />
     <Compile Include="Configuration\RootAppender.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ILogger.cs" />

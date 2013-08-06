@@ -28,14 +28,15 @@ namespace NLogger
             Appenders = new List<ILogAppender>();
         }
 
-        public void Initialize()
+        public void Initialize(NLoggerConfigurationSection config)
         {
-            var config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
+            if(config == null)
+                config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
+
             if(config == null) throw new ConfigurationErrorsException("No configuration section found");
             if (config.Root != null)
-            {
                 Root.LoggingLevels = GetLoggingLevels(config.Root);
-            }
+            
             foreach (NLoggerAppender item in config.Appenders)
             {
                 ILogAppender appender;

@@ -46,6 +46,7 @@
     <Compile Include="AppenderConfigurationTests.cs" />
     <Compile Include="WhenFileAppenderLoggerIsCalled.cs" />
     <Compile Include="WhenFileAppenderLoggerIsCalledWithAttachedCustomOutput.cs" />
+    <Compile Include="WhenLoggerInitializeIsCalled.cs" />
     <Compile Include="WhenLoggerIsCalled.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
