@@ -21,6 +21,8 @@ namespace NLogger.Appenders
 
         private Thread _loggerThread;
 
+        private DateTime _lastWrite;
+
         #endregion
 
 
@@ -38,6 +40,8 @@ namespace NLogger.Appenders
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
         public TimeSpan TimeSinceLastWrite { get; set; }
+        public int MaxQueueCache { get; set; }
+        public int TimeBetweenChecks { get; set; }
 
         #endregion
 
@@ -90,15 +94,17 @@ namespace NLogger.Appenders
         {
             _loggerThread = new Thread(OnThreadStart);
             _loggerThread.Start();
+            _lastWrite = DateTime.Now;
             TimeSinceLastWrite = new TimeSpan(0, 0, 30);
+            MaxQueueCache = 100;
         }
 
         private void OnThreadStart()
         {
             do
             {
-                Thread.Sleep(500);
-                if (_queue.Count < 100) continue;
+                Thread.Sleep(TimeBetweenChecks);
+                if (_queue.Count < MaxQueueCache && (DateTime.Now - _lastWrite) < TimeSinceLastWrite) continue;
                 if (OnLogWritten == null) continue;
                 var logItems = new List<LogItem>();
                 for (var i = 0; i < _queue.Count; i++)
@@ -109,9 +115,11 @@ namespace NLogger.Appenders
                     logItems.Add(item);
                 }
                 OnLogWritten(logItems);
+                _lastWrite = DateTime.Now;
             } while (!_disposing);
             _loggerThread.Abort();
             _loggerThread = null;
+            FinalizeDispose();
         }
 
         #endregion

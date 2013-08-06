@@ -25,6 +25,21 @@ namespace NLogger.Appenders
         /// </summary>
         string Parameters { get; set; }
 
+        /// <summary>
+        /// Maximum amount of time to cache data between writes
+        /// </summary>
+        TimeSpan TimeSinceLastWrite { get; set; }
+
+        /// <summary>
+        /// Maximum number of items in queue before writes
+        /// </summary>
+        int MaxQueueCache { get; set; }
+
+        /// <summary>
+        /// Time between cache write checks in milliseconds
+        /// </summary>
+        int TimeBetweenChecks { get; set; }
+
         event Logger.LogWritten OnLogWritten;
     }
 }

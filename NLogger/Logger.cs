@@ -10,6 +10,9 @@ namespace NLogger
 {
     public class Logger : ILogger
     {
+
+        #region Fields
+
         private static readonly Dictionary<string, Func<LogItem, string>> DefaultFormatting = new Dictionary
             <string, Func<LogItem, string>>
             {
@@ -27,6 +30,15 @@ namespace NLogger
                 {"%level", x => x.Level.ToString()}
             };
 
+        #endregion
+
+        /// <summary>
+        /// Formats the log item into string according to specified formatting parameters
+        /// </summary>
+        /// <param name="format">Log format</param>
+        /// <param name="item">Log item</param>
+        /// <param name="overrides">Formatting parameter overrides</param>
+        /// <returns>Formatted string</returns>
         public static string FormatLog(string format, LogItem item, Dictionary<string, Func<LogItem, string>> overrides = null)
         {
             for (var i = 0; i < DefaultFormatting.Count; i++)
@@ -63,6 +75,8 @@ namespace NLogger
             Appenders = new List<ILogAppender>();
         }
 
+        #endregion
+
         public ILogger Initialize(NLoggerConfigurationSection config = null)
         {
             if(config == null)
@@ -87,29 +101,6 @@ namespace NLogger
             }
             return this;
         }
-
-        private static LoggingLevel[] GetLoggingLevels(Configuration.RootAppender appender)
-        {
-            if(appender == null)
-                return new LoggingLevel[0];
-            var list = new List<LoggingLevel>();
-            if (appender.Level.Fatal)
-                list.Add(LoggingLevel.Fatal);
-            if (appender.Level.Error)
-                list.Add(LoggingLevel.Error);
-            if (appender.Level.Warning)
-                list.Add(LoggingLevel.Warning);
-            if (appender.Level.Debug)
-                list.Add(LoggingLevel.Debug);
-            if (appender.Level.Info)
-                list.Add(LoggingLevel.Info);
-            if (appender.Level.Trace)
-                list.Add(LoggingLevel.Trace);
-
-            return list.ToArray();
-        }
-
-        #endregion
         
 
         #region Properties
@@ -250,6 +241,27 @@ namespace NLogger
         private LoggingLevel GetLoggingLevel(string value)
         {
             return (LoggingLevel) Enum.Parse(typeof (LoggingLevel), value);
+        }
+
+        private static LoggingLevel[] GetLoggingLevels(Configuration.RootAppender appender)
+        {
+            if (appender == null)
+                return new LoggingLevel[0];
+            var list = new List<LoggingLevel>();
+            if (appender.Level.Fatal)
+                list.Add(LoggingLevel.Fatal);
+            if (appender.Level.Error)
+                list.Add(LoggingLevel.Error);
+            if (appender.Level.Warning)
+                list.Add(LoggingLevel.Warning);
+            if (appender.Level.Debug)
+                list.Add(LoggingLevel.Debug);
+            if (appender.Level.Info)
+                list.Add(LoggingLevel.Info);
+            if (appender.Level.Trace)
+                list.Add(LoggingLevel.Trace);
+
+            return list.ToArray();
         }
 
         #endregion
