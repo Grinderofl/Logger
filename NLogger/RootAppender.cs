@@ -41,6 +41,8 @@ namespace NLogger
         public void Log(string message, Exception exception, LoggingLevel level)
         {
             _queue.Enqueue(new LogItem(message, exception, level));
+            if (OnLogWritten != null)
+                OnLogWritten(new List<LogItem>() {new LogItem(message, exception, level)});
         }
     }
 }

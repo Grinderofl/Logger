@@ -123,7 +123,7 @@ namespace NLogger.Appenders
             return errorCode == 32 || errorCode == 33;
         }
 
-        private readonly BackgroundWorker _worker;
+        //private readonly BackgroundWorker _worker;
 
 
         public void Dispose()
