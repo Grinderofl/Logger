@@ -116,6 +116,18 @@ namespace NLogger.Appenders
 
         #endregion
 
+        private Dictionary<string, Func<LogItem, string>> _formatting = new Dictionary<string, Func<LogItem, string>>()
+            {
+                {"%exception", x => x.Exception != null ? x.Exception.Message.Replace(Environment.NewLine, "") : ""},
+                {
+                    "%stacktrace",
+                    x =>
+                    x.Exception != null && x.Exception.StackTrace != null
+                        ? x.Exception.StackTrace.Replace(Environment.NewLine, "")
+                        : ""
+                }
+            };
+
         private void DefaultLogWriter(IList<LogItem> logItems)
         {
             try
@@ -131,7 +143,7 @@ namespace NLogger.Appenders
                                                         Logger.FormatLog(
                                                             string.IsNullOrEmpty(LogPattern)
                                                                 ? DefaultLogPattern
-                                                                : LogPattern, item));
+                                                                : LogPattern, item, _formatting));
                             fw.WriteLine(toWrite);
                         }
                     fs.Flush(true);

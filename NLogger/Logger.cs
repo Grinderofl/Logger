@@ -13,12 +13,12 @@ namespace NLogger
         private static readonly Dictionary<string, Func<LogItem, string>> DefaultFormatting = new Dictionary
             <string, Func<LogItem, string>>
             {
-                {"%exception", x => x.Exception != null ? x.Exception.Message.Replace(Environment.NewLine, "") : ""},
+                {"%exception", x => x.Exception != null ? x.Exception.Message : ""},
                 {
                     "%stacktrace",
                     x =>
                     x.Exception != null && x.Exception.StackTrace != null
-                        ? x.Exception.StackTrace.Replace(Environment.NewLine, "")
+                        ? x.Exception.StackTrace
                         : ""
                 },
                 {"%date", x => x.Created.ToString("yyyy/MM/dd HH:mm:ss.fffffff")},
@@ -44,7 +44,6 @@ namespace NLogger
                 else
                     replace = element.Value.Invoke(item);
                 format = format.Replace(element.Key, replace);
-
             }
 
             if (overrides != null)
