@@ -28,7 +28,7 @@ namespace NLogger
             Appenders = new List<ILogAppender>();
         }
 
-        public ILogger Initialize(NLoggerConfigurationSection config)
+        public ILogger Initialize(NLoggerConfigurationSection config = null)
         {
             if(config == null)
                 config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
@@ -36,13 +36,14 @@ namespace NLogger
             if(config == null) throw new ConfigurationErrorsException("No configuration section found");
             if (config.Root != null)
                 Root.LoggingLevels = GetLoggingLevels(config.Root);
-            
+
+
             foreach (NLoggerAppender item in config.Appenders)
             {
                 ILogAppender appender;
                 if (item.Type.ToLower().Contains("fileloggerappender"))
                     appender = new FileLoggerAppender();
-                else if(item.Type.ToLower().Contains("consoleloggerappender"))
+                else if (item.Type.ToLower().Contains("consoleloggerappender"))
                     appender = new ConsoleLoggerAppender();
                 else
                     appender = new MemoryLoggerAppender();

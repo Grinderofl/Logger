@@ -22,6 +22,7 @@ namespace NLogger.Appenders
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
+        public TimeSpan TimeSinceLastWrite { get; set; }
 
         private const string DefaultLogPattern = "[%level] %date %message";
 
@@ -35,6 +36,7 @@ namespace NLogger.Appenders
         {
             _loggerThread = new Thread(OnThreadStart);
             _loggerThread.Start();
+            TimeSinceLastWrite = new TimeSpan(0, 0, 30);
         }
 
         private void OnThreadStart()
