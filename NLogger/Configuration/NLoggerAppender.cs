@@ -33,5 +33,33 @@ namespace NLogger.Configuration
             get { return (string) this["parameters"]; }
             set { this["parameters"] = value; }
         }
+
+        [ConfigurationProperty("file", IsRequired = false)]
+        public NLoggerFile File
+        {
+            get { return (NLoggerFile) this["file"]; }
+            set { this["file"] = value; }
+        }
+
+        [ConfigurationProperty("timesincelastwrite")]
+        public string TimeSinceLastWrite
+        {
+            get { return (string) this["timesincelastwrite"]; }
+            set { this["timesincelastwrite"] = value; }
+        }
+
+        [ConfigurationProperty("maxqueuesize")]
+        public int MaxQueueSize
+        {
+            get { return (int) this["maxqueuesize"]; }
+            set { this["maxqueuesize"] = value; }
+        }
+
+        [ConfigurationProperty("timebetweenchecks")]
+        public int TimeBetweenChecks
+        {
+            get { return (int) this["timebetweenchecks"]; }
+            set { this["timebetweenchecks"] = value; }
+        }
     }
 }

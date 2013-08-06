@@ -96,6 +96,22 @@ namespace NLogger
                 appender.LoggingLevels = GetLoggingLevels(item);
                 if (item.Pattern != null)
                     appender.LogPattern = item.Pattern.Value;
+                appender.Name = item.Name;
+                appender.MaxQueueCache = item.MaxQueueSize;
+                appender.TimeBetweenChecks = item.TimeBetweenChecks;
+                if (item.TimeSinceLastWrite != "")
+                {
+                    TimeSpan timeSinceLastWrite;
+                    if (TimeSpan.TryParse(item.TimeSinceLastWrite, out timeSinceLastWrite))
+                        appender.TimeSinceLastWrite = timeSinceLastWrite;
+
+                }
+                if (item.File != null)
+                {
+                    appender.Location = item.File.Location;
+                    appender.MaxFileSize = item.File.MaxSize;
+                    appender.MaxLogCount = item.File.MaxCount;
+                }
 
                 Appenders.Add(appender);
             }

@@ -22,6 +22,7 @@ namespace NLogger.Appenders
 
         private const string DefaultLogPattern = "[%date][%level] %message";
 
+        public string Name { get; set; }
         public LoggingLevel[] LoggingLevels { get; set; }
         public long Queued { get { return 0; } }
         public string LogPattern { get; set; }
@@ -29,6 +30,9 @@ namespace NLogger.Appenders
         public TimeSpan TimeSinceLastWrite { get; set; }
         public int MaxQueueCache { get; set; }
         public int TimeBetweenChecks { get; set; }
+        public string MaxFileSize { get; set; }
+        public string Location { get; set; }
+        public int MaxLogCount { get; set; }
         public event Logger.LogWritten OnLogWritten;
     }
 }

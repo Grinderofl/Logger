@@ -35,6 +35,7 @@ namespace NLogger.Appenders
 
         #region Properties
 
+        public string Name { get; set; }
         public LoggingLevel[] LoggingLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
@@ -42,6 +43,9 @@ namespace NLogger.Appenders
         public TimeSpan TimeSinceLastWrite { get; set; }
         public int MaxQueueCache { get; set; }
         public int TimeBetweenChecks { get; set; }
+        public string MaxFileSize { get; set; }
+        public string Location { get; set; }
+        public int MaxLogCount { get; set; }
 
         #endregion
 

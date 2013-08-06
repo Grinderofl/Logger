@@ -5,6 +5,8 @@ namespace NLogger.Appenders
 {
     public interface ILogAppender : ILoggerBase, IDisposable
     {
+        string Name { get; set; }
+
         /// <summary>
         /// Logging level
         /// </summary>
@@ -39,6 +41,12 @@ namespace NLogger.Appenders
         /// Time between cache write checks in milliseconds
         /// </summary>
         int TimeBetweenChecks { get; set; }
+
+        string MaxFileSize { get; set; }
+
+        string Location { get; set; }
+
+        int MaxLogCount { get; set; }
 
         event Logger.LogWritten OnLogWritten;
     }

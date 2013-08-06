@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{8066B2E2-3A1B-48D7-9958-544A4C195E7E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{545BAA2C-4493-4190-B158-20D4DC721BB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogger", "NLogger\NLogger.csproj", "{ADB304C4-7777-4602-99D4-11705451F9D7}"
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8066B2E2-3A1B-48D7-9958-544A4C195E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8066B2E2-3A1B-48D7-9958-544A4C195E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8066B2E2-3A1B-48D7-9958-544A4C195E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8066B2E2-3A1B-48D7-9958-544A4C195E7E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{545BAA2C-4493-4190-B158-20D4DC721BB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{545BAA2C-4493-4190-B158-20D4DC721BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{545BAA2C-4493-4190-B158-20D4DC721BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
