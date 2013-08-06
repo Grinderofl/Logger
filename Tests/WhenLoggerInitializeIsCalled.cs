@@ -23,11 +23,11 @@ namespace Tests
   <root>
     <level error=""true""/>
   </root>
-  <appender name=""FileAppender"" type=""NLogger.Appenders.FileLoggerAppender"" parameters=""C:\BS\log.txt"">
+  <appender name=""FileAppender"" type=""NLogger.Appenders.FileLoggerAppender, NLogger"" parameters=""C:\BS\log.txt"">
     <level info=""true""/>
     <pattern value=""%date %level %message""/>
   </appender>
-  <appender name=""MemoryAppender"" type=""NLogger.Appenders.MemoryLoggerAppender"">
+  <appender name=""MemoryAppender"" type=""NLogger.Appenders.MemoryLoggerAppender, NLogger"">
     <level debug=""true""/>
   </appender>
 </NLoggerConfiguration>";

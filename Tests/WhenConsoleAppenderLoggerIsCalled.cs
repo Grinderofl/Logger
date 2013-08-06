@@ -23,7 +23,7 @@ namespace Tests
   <root>
     <level error=""true""/>
   </root>
-  <appender name=""ConsoleAppender"" type=""NLogger.Appenders.ConsoleLoggerAppender"" parameters=""C:\BS\log.txt"">
+  <appender name=""ConsoleAppender"" type=""NLogger.Appenders.ConsoleLoggerAppender, NLogger"" parameters=""C:\BS\log.txt"">
     <level info=""true""/>
     <pattern value=""%date %level %message""/>
   </appender>

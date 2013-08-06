@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Reflection;
 using NLogger.Appenders;
 using NLogger.Configuration;
 
@@ -40,14 +41,16 @@ namespace NLogger
 
             foreach (NLoggerAppender item in config.Appenders)
             {
-                ILogAppender appender;
-                if (item.Type.ToLower().Contains("fileloggerappender"))
+                var type = item.Type.Split(',');
+                var appender = (ILogAppender) Activator.CreateInstance(type[1].Trim(), type[0].Trim()).Unwrap();
+
+                /*if (item.Type.ToLower().Contains("fileloggerappender"))
                     appender = new FileLoggerAppender();
                 else if (item.Type.ToLower().Contains("consoleloggerappender"))
                     appender = new ConsoleLoggerAppender();
                 else
                     appender = new MemoryLoggerAppender();
-
+                */
                 appender.Parameters = item.Parameters;
                 appender.LoggingLevels = GetLoggingLevels(item);
                 if (item.Pattern != null)
