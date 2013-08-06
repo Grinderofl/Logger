@@ -12,16 +12,6 @@ namespace NLogger.Configuration
     {
         public NLoggerConfigurationSectionXmlLoader(string xml)
         {
-            var settings = new XmlReaderSettings()
-                {
-                    CloseInput = true,
-                    IgnoreWhitespace = true,
-                    IgnoreComments = true,
-                    IgnoreProcessingInstructions = true,
-                    CheckCharacters = false,
-                    ValidationType = ValidationType.None
-                };
-
             using (var reader = new XmlTextReader(new StringReader(xml)))
             {
                 DeserializeSection(reader);
