@@ -134,5 +134,36 @@ namespace NLogger
         {
             LogMessage(message, exception, LoggingLevel.Trace);
         }
+
+
+        public static void FatalFormat(string message, params object[] args)
+        {
+            Fatal(string.Format(message, args));
+        }
+
+        public static void ErrorFormat(string message, params object[] args)
+        {
+            Error(string.Format(message, args));
+        }
+
+        public static void WarningFormat(string message, params object[] args)
+        {
+            Warning(string.Format(message, args));
+        }
+
+        public static void DebugFormat(string message, params object[] args)
+        {
+            Debug(string.Format(message, args));
+        }
+
+        public static void InfoFormat(string message, params object[] args)
+        {
+            Info(string.Format(message, args));
+        }
+
+        public static void TraceFormat(string message, params object[] args)
+        {
+            Trace(string.Format(message, args));
+        }
     }
 }
