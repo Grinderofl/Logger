@@ -3,10 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.AccessControl;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace NLogger.Appenders
@@ -16,6 +18,26 @@ namespace NLogger.Appenders
         #region Fields
 
         private ConcurrentQueue<LogItem> _queue;
+
+        private readonly Dictionary<string, Func<LogItem, string>> _formatting = new Dictionary
+    <string, Func<LogItem, string>>()
+            {
+                {"%exception", x => x.Exception != null ? x.Exception.Message.Replace(Environment.NewLine, "") : ""},
+                {
+                    "%stacktrace",
+                    x =>
+                    x.Exception != null && x.Exception.StackTrace != null
+                        ? x.Exception.StackTrace.Replace(Environment.NewLine, "")
+                        : ""
+                }
+            };
+
+        private readonly Dictionary<string, long> _conversion = new Dictionary<string, long>
+            {
+                {"KB", 1024},
+                {"MB", 1024*1024},
+                {"GB", 1024*1024*1024}
+            };
 
         private bool _disposing;
 
@@ -61,6 +83,7 @@ namespace NLogger.Appenders
 
         public FileLoggerAppender()
         {
+            MaxLogCount = -1;
             _queue = new ConcurrentQueue<LogItem>();
             OnLogWritten += DefaultLogWriter;
             BeginLogWriter();
@@ -128,24 +151,63 @@ namespace NLogger.Appenders
 
         #endregion
 
-        private Dictionary<string, Func<LogItem, string>> _formatting = new Dictionary<string, Func<LogItem, string>>()
-            {
-                {"%exception", x => x.Exception != null ? x.Exception.Message.Replace(Environment.NewLine, "") : ""},
-                {
-                    "%stacktrace",
-                    x =>
-                    x.Exception != null && x.Exception.StackTrace != null
-                        ? x.Exception.StackTrace.Replace(Environment.NewLine, "")
-                        : ""
-                }
-            };
+
 
         private void DefaultLogWriter(IList<LogItem> logItems)
         {
+            
+            if (!string.IsNullOrWhiteSpace(MaxFileSize))
+            {
+                var result = Regex.Match(MaxFileSize, @"\d+").Value;
+                long size;
+                if (long.TryParse(result, out size))
+                {
+                    for (var i = 0; i < _conversion.Count; i++)
+                    {
+                        var element = _conversion.ElementAt(i);
+                        if (!MaxFileSize.ToUpper().Contains(element.Key)) continue;
+                        size *= element.Value;
+                        break;
+                    }
+                    
+                    if (File.Exists(Location))
+                    {
+                        var info = new FileInfo(Location);
+                        if (info.Length >= size)
+                        {
+                            File.SetLastWriteTime(Location, DateTime.Now);
+                            var move = DateTime.Now;
+                            info.MoveTo(Location + "." + move.ToString("yyyy/dd/MM_HH-mm-ss.fffffff"));
+                            if (MaxLogCount != -1)
+                            {
+                                var directory = Path.GetDirectoryName(Location);
+                                var filename = Path.GetFileName(Location);
+                                if(directory != null)
+                                {
+                                    var files = Directory.GetFiles(directory, filename + ".*",
+                                                                   SearchOption.TopDirectoryOnly);
+                                    if (MaxLogCount == 0)
+                                        files.ForEach(File.Delete);
+                                    else
+                                    {
+                                        files.Select(x => new FileInfo(x))
+                                             .ToList()
+                                             .OrderByDescending(x => x.LastWriteTime)
+                                             .Skip(MaxLogCount).ForEach(x => File.Delete(x.FullName));
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+
             try
             {
                 using (
-                    var fs = new FileStream(Parameters, FileMode.Append, FileAccess.Write, FileShare.Write, 256,
+                    var fs = new FileStream(Location, FileMode.Append, FileAccess.Write, FileShare.Write, 256,
                                             FileOptions.WriteThrough))
                 {
                     using (var fw = new StreamWriter(fs, new UTF8Encoding(), 256, true))
@@ -175,7 +237,7 @@ namespace NLogger.Appenders
             _queue = null;
         }
 
-        private static bool IsFileLocked(IOException exception)
+        private static bool IsFileLocked(Exception exception)
         {
             int errorCode = Marshal.GetHRForException(exception) & ((1 << 16) - 1);
             return errorCode == 32 || errorCode == 33;

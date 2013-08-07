@@ -50,8 +50,10 @@ namespace Tests
         public void CustomOutputShouldReceiveLoggedData()
         {
             for (int i = 0; i < 1500; i++)
+            {
                 _logger.LogInfo("Logging message " + i, new Exception("Hello exception"));
-            
+            }
+
 
             Wait();
             Assert.That(_items.Count, Is.GreaterThan(10));

@@ -16,5 +16,13 @@ namespace NLogger
 
             return false;
         }
+
+        public static void ForEach<T>(this IEnumerable<T> ienumerable, Action<T> action)
+        {
+            foreach (var enumerable in ienumerable)
+            {
+                action(enumerable);
+            }
+        }
     }
 }
