@@ -212,13 +212,15 @@ namespace NLogger.Appenders
                                             FileOptions.WriteThrough))
                 {
                     using (var fw = new StreamWriter(fs, new UTF8Encoding(), 256, true))
-                        foreach (var item in logItems)
+// ReSharper disable ForCanBeConvertedToForeach Reason: Optimization
+                        for (int i = 0; i < logItems.Count; i++)
+// ReSharper restore ForCanBeConvertedToForeach
                         {
                             var toWrite = string.Format("{0}",
-                                                        Logger.FormatLog(
-                                                            string.IsNullOrEmpty(LogPattern)
-                                                                ? DefaultLogPattern
-                                                                : LogPattern, item, _formatting));
+                                                            Logger.FormatLog(
+                                                                string.IsNullOrEmpty(LogPattern)
+                                                                    ? DefaultLogPattern
+                                                                    : LogPattern, logItems[i], _formatting));
                             fw.WriteLine(toWrite);
                         }
                     fs.Flush(true);
