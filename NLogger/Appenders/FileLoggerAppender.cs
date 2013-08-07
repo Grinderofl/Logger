@@ -84,6 +84,9 @@ namespace NLogger.Appenders
         public FileLoggerAppender()
         {
             MaxLogCount = -1;
+            TimeSinceLastWrite = new TimeSpan(0, 0, 30);
+            TimeBetweenChecks = 30;
+            MaxQueueCache = 100;
             _queue = new ConcurrentQueue<LogItem>();
             OnLogWritten += DefaultLogWriter;
             BeginLogWriter();
@@ -122,8 +125,6 @@ namespace NLogger.Appenders
             _loggerThread = new Thread(OnThreadStart);
             _loggerThread.Start();
             _lastWrite = DateTime.Now;
-            TimeSinceLastWrite = new TimeSpan(0, 0, 30);
-            MaxQueueCache = 100;
         }
 
         private void OnThreadStart()
