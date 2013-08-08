@@ -23,4 +23,14 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		BuildVersion_UseGlobalSettings = True
+		BuildVersion_AssemblyInfoFilename = NLogger\Properties\AssemblyInfo.cs
+		BuildVersion_UseUniversalClock = True
+		BuildVersion_UpdateFileVersion = True
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_DetectChanges = False
+		BuildVersion_ReplaceNonNumerics = False
+		BuildVersion_BuildVersioningStyle = None.None.Increment.DayStamp
+	EndGlobalSection
 EndGlobal

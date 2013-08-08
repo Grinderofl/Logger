@@ -219,6 +219,7 @@ namespace NLogger.Appenders
             try
             {
                 if (string.IsNullOrWhiteSpace(Location)) return;
+                Debug.Assert(Location != null, "Location is null");
                 if (!Directory.Exists(Path.GetDirectoryName(Location)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(Location));
