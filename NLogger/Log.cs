@@ -4,7 +4,7 @@ namespace NLogger
 {
     public static class Log
     {
-        private static readonly ILogger Instance;
+        public static readonly ILogger Instance;
 
         static Log()
         {

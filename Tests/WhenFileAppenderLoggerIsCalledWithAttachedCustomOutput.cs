@@ -42,6 +42,7 @@ namespace Tests
         {
             while (_running)
             {
+                Thread.Sleep(50);
             }
         }
 
@@ -49,7 +50,7 @@ namespace Tests
         [Test]
         public void CustomOutputShouldReceiveLoggedData()
         {
-            for (int i = 0; i < 1500; i++)
+            for (int i = 0; i < 150; i++)
             {
                 _logger.LogInfo("Logging message " + i, new Exception("Hello exception"));
             }
