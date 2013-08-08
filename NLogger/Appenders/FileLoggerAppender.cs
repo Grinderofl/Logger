@@ -219,7 +219,7 @@ namespace NLogger.Appenders
             try
             {
                 if (string.IsNullOrWhiteSpace(Location)) return;
-                if (Directory.Exists(Path.GetDirectoryName(Location)))
+                if (!Directory.Exists(Path.GetDirectoryName(Location)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(Location));
                 }
