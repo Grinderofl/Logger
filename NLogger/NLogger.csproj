@@ -54,6 +54,7 @@
     <Compile Include="Configuration\NLoggerConfigurationSectionXmlLoader.cs" />
     <Compile Include="Configuration\NLoggerFile.cs" />
     <Compile Include="Configuration\RootAppender.cs" />
+    <Compile Include="EventLogWriter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILoggerBase.cs" />

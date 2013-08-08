@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -90,6 +91,7 @@ namespace NLogger.Appenders
             _queue = new ConcurrentQueue<LogItem>();
             OnLogWritten += DefaultLogWriter;
             BeginLogWriter();
+            EventLogWriter.Log("FileLoggerAppender created", EventLogEntryType.Information, 0);
         }
 
         #endregion
@@ -170,36 +172,45 @@ namespace NLogger.Appenders
                         size *= element.Value;
                         break;
                     }
-                    
-                    if (File.Exists(Location))
+                    try
                     {
-                        var info = new FileInfo(Location);
-                        if (info.Length >= size)
+                        if (File.Exists(Location))
                         {
-                            File.SetLastWriteTime(Location, DateTime.Now);
-                            var move = DateTime.Now;
-                            info.MoveTo(Location + "." + move.ToString("yyyy/dd/MM_HH-mm-ss.fffffff"));
-                            if (MaxLogCount != -1)
+                            var info = new FileInfo(Location);
+                            if (info.Length >= size)
                             {
-                                var directory = Path.GetDirectoryName(Location);
-                                var filename = Path.GetFileName(Location);
-                                if(directory != null)
+                                File.SetLastWriteTime(Location, DateTime.Now);
+                                var move = DateTime.Now;
+                                info.MoveTo(Location + "." + move.ToString("yyyy/dd/MM_HH-mm-ss.fffffff"));
+                                if (MaxLogCount != -1)
                                 {
-                                    var files = Directory.GetFiles(directory, filename + ".*",
-                                                                   SearchOption.TopDirectoryOnly);
-                                    if (MaxLogCount == 0)
-                                        files.ForEach(File.Delete);
-                                    else
+                                    var directory = Path.GetDirectoryName(Location);
+                                    var filename = Path.GetFileName(Location);
+                                    if (directory != null)
                                     {
-                                        files.Select(x => new FileInfo(x))
-                                             .ToList()
-                                             .OrderByDescending(x => x.LastWriteTime)
-                                             .Skip(MaxLogCount).ForEach(x => File.Delete(x.FullName));
-                                    }
+                                        var files = Directory.GetFiles(directory, filename + ".*",
+                                                                       SearchOption.TopDirectoryOnly);
+                                        if (MaxLogCount == 0)
+                                            files.ForEach(File.Delete);
+                                        else
+                                        {
+                                            files.Select(x => new FileInfo(x))
+                                                 .ToList()
+                                                 .OrderByDescending(x => x.LastWriteTime)
+                                                 .Skip(MaxLogCount).ForEach(x => File.Delete(x.FullName));
+                                        }
 
+                                    }
                                 }
                             }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        EventLogWriter.Log(
+                            string.Format(
+                                "Exception occurred in FileLoggerAppender -> DefaultLogWriter, {2}Message: {2}{0}{2}StackTrace: {2}{1}{2}Source: {2}{3}",
+                                e.Message, e.StackTrace, Environment.NewLine, e.Source), EventLogEntryType.Error, 4);
                     }
                 }
                 
@@ -207,6 +218,11 @@ namespace NLogger.Appenders
 
             try
             {
+                if (string.IsNullOrWhiteSpace(Location)) return;
+                if (Directory.Exists(Path.GetDirectoryName(Location)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(Location));
+                }
                 using (
                     var fs = new FileStream(Location, FileMode.Append, FileAccess.Write, FileShare.Write, 256,
                                             FileOptions.WriteThrough))
@@ -217,10 +233,10 @@ namespace NLogger.Appenders
 // ReSharper restore ForCanBeConvertedToForeach
                         {
                             var toWrite = string.Format("{0}",
-                                                            Logger.FormatLog(
-                                                                string.IsNullOrEmpty(LogPattern)
-                                                                    ? DefaultLogPattern
-                                                                    : LogPattern, logItems[i], _formatting));
+                                                        Logger.FormatLog(
+                                                            string.IsNullOrEmpty(LogPattern)
+                                                                ? DefaultLogPattern
+                                                                : LogPattern, logItems[i], _formatting));
                             fw.WriteLine(toWrite);
                         }
                     fs.Flush(true);
@@ -229,9 +245,30 @@ namespace NLogger.Appenders
             catch (IOException e)
             {
                 if (!IsFileLocked(e))
-                    throw;
+                {
+                    EventLogWriter.Log(
+                        string.Format(
+                            "IOException occurred in FileLoggerAppender -> DefaultLogWriter, {2}Message: {2}{0}{2}StackTrace: {2}{1}{2}Source: {2}{3}",
+                                e.Message, e.StackTrace, Environment.NewLine, e.Source), EventLogEntryType.Error, 3);
+                    return;
+                }
                 Thread.Sleep(2000);
                 DefaultLogWriter(logItems);
+            }
+            catch (ArgumentNullException e)
+            {
+                EventLogWriter.Log(
+                    string.Format(
+                        "ArgumentNullException occurred in FileLoggerAppender -> DefaultLogWriter, {2}Message: {2}{0}{2}StackTrace: {2}{1}{2}Source: {2}{3}",
+                                e.Message, e.StackTrace, Environment.NewLine, e.Source), EventLogEntryType.Error, 1);
+                // Sometimes a 'file not found' exception is thrown, not sure why
+            }
+            catch (Exception e)
+            {
+                EventLogWriter.Log(
+                    string.Format(
+                        "Exception occurred in FileLoggerAppender -> DefaultLogWriter, {2}Message: {2}{0}{2}StackTrace: {2}{1}{2}Source: {2}{3}",
+                                e.Message, e.StackTrace, Environment.NewLine, e.Source), EventLogEntryType.Error, 2);
             }
         }
 
