@@ -45,6 +45,8 @@
     <Compile Include="Appenders\ConsoleLoggerAppender.cs" />
     <Compile Include="Appenders\FileLoggerAppender.cs" />
     <Compile Include="Appenders\ILogAppender.cs" />
+    <Compile Include="Appenders\ILogAppenderFluent.cs" />
+    <Compile Include="Appenders\LogAppender.cs" />
     <Compile Include="Appenders\MemoryLoggerAppender.cs" />
     <Compile Include="Configuration\NLoggerAppender.cs" />
     <Compile Include="Configuration\NLoggerAppenderCollection.cs" />

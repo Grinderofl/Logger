@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace NLogger
             Exception = exception;
             Created = DateTime.UtcNow;
             Level = level;
+            Thread = System.Threading.Thread.CurrentThread.ManagedThreadId;
         }
 
         /// <summary>
@@ -35,6 +37,11 @@ namespace NLogger
         /// Logging level
         /// </summary>
         public LoggingLevel Level { get; set; }
-        
+
+        /// <summary>
+        /// Calling thread
+        /// </summary>
+        public int Thread { get; set; }
+
     }
 }

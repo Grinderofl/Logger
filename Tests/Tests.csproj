@@ -48,6 +48,7 @@
     <Compile Include="WhenConsoleAppenderLoggerIsCalled.cs" />
     <Compile Include="WhenFileAppenderLoggerIsCalled.cs" />
     <Compile Include="WhenFileAppenderLoggerIsCalledWithAttachedCustomOutput.cs" />
+    <Compile Include="WhenLoggerFluentInitializeIsCalled.cs" />
     <Compile Include="WhenLoggerInitializeIsCalled.cs" />
     <Compile Include="WhenLoggerIsCalled.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

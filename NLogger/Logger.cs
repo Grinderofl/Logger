@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using NLogger.Appenders;
@@ -8,6 +9,9 @@ using NLogger.Configuration;
 
 namespace NLogger
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Logger : ILogger
     {
 
@@ -27,7 +31,8 @@ namespace NLogger
                 {"%date", x => x.Created.ToString("yyyy/MM/dd HH:mm:ss.fffffff")},
                 {"%shortdate", x => x.Created.ToString("yyyy/MM/dd HH:mm:ss")},
                 {"%message", x => x.Message},
-                {"%level", x => x.Level.ToString()}
+                {"%level", x => x.Level.ToString()},
+                {"%thread", x => x.Thread.ToString(CultureInfo.InvariantCulture)}
             };
 
         #endregion
@@ -77,12 +82,45 @@ namespace NLogger
 
         #endregion
 
+        /// <summary>
+        /// Initializes config from XML String
+        /// </summary>
+        /// <param name="config">XML string</param>
+        /// <returns></returns>
+        public ILogger InitializeFromXmlString(NLoggerConfigurationSection config)
+        {
+            return Initialize(config);
+        }
+
+        /// <summary>
+        /// Initializes configuration via fluent interface
+        /// </summary>
+        /// <param name="defaultLoggingLevels">Default logging levels</param>
+        /// <returns></returns>
+        public ILogger InitializeFluent(LoggingLevel[] defaultLoggingLevels = null)
+        {
+            Root.Name = "Root";
+            Root.LoggingLevels = defaultLoggingLevels;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an appender
+        /// </summary>
+        /// <param name="appender">Appender to add</param>
+        /// <returns></returns>
+        public ILogger Appender(ILogAppenderFluent appender)
+        {
+            Appenders.Add(appender);
+            return this;
+        }
+
         public ILogger Initialize(NLoggerConfigurationSection config = null)
         {
             if(config == null)
                 config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
 
-            if(config == null) throw new ConfigurationErrorsException("No configuration section found");
+            if (config == null) return null;
             if (config.Root != null)
                 Root.LoggingLevels = GetLoggingLevels(config.Root);
 
@@ -135,7 +173,7 @@ namespace NLogger
 
         public void Log(string message, Exception exception, LoggingLevel level)
         {
-            bool rootlevel = Root.LoggingLevels.Contains(level);
+            bool rootlevel = Root.LoggingLevels != null && Root.LoggingLevels.Contains(level);
 
             if (rootlevel)
                 Root.Log(message, exception, level);

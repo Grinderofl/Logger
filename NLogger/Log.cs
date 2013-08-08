@@ -4,6 +4,9 @@ namespace NLogger
 {
     public static class Log
     {
+        /// <summary>
+        /// Logger instance
+        /// </summary>
         public static readonly ILogger Instance;
 
         static Log()
@@ -14,7 +17,8 @@ namespace NLogger
         private static void LogMessage(string message, Exception exception = null,
                                        LoggingLevel level = LoggingLevel.Info)
         {
-            Instance.Log(message, exception, level);
+            if(Instance != null)
+                Instance.Log(message, exception, level);
         }
 
         /// <summary>

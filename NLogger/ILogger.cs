@@ -7,6 +7,11 @@ namespace NLogger
 {
     public interface ILogger : ILoggerBase, IDisposable
     {
+
+        ILogger Appender(ILogAppenderFluent appender);
+
+        ILogger InitializeFluent(LoggingLevel[] defaultLoggingLevels = null);
+
         /// <summary>
         /// Logger appenders
         /// </summary>

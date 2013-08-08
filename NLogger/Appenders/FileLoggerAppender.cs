@@ -13,7 +13,10 @@ using System.Threading;
 
 namespace NLogger.Appenders
 {
-    public class FileLoggerAppender : ILogAppender
+    /// <summary>
+    /// File Logger Appender
+    /// </summary>
+    public class FileLoggerAppender : LogAppender
     {
         #region Fields
 
@@ -57,9 +60,9 @@ namespace NLogger.Appenders
 
         #region Properties
 
-        public string Name { get; set; }
+        /*public string Name { get; set; }
         public LoggingLevel[] LoggingLevels { get; set; }
-        public long Queued { get { return _queue.Count; } }
+        
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
         public TimeSpan TimeSinceLastWrite { get; set; }
@@ -67,7 +70,9 @@ namespace NLogger.Appenders
         public int TimeBetweenChecks { get; set; }
         public string MaxFileSize { get; set; }
         public string Location { get; set; }
-        public int MaxLogCount { get; set; }
+        public int MaxLogCount { get; set; }*/
+
+        public new long Queued { get { return _queue.Count; } }
 
         #endregion
 
@@ -92,15 +97,30 @@ namespace NLogger.Appenders
             BeginLogWriter();
         }
 
+        public FileLoggerAppender(string name, string pattern = "", string parameters = "",
+                                  TimeSpan timeSinceLastWrite = new TimeSpan(), int maxQueueCache = 100,
+                                  int timeBetweenChecks = 50, string maxFileSize = "10MB", string location = "",
+                                  int maxLogCount = 0)
+            : base(
+                name, pattern, parameters, timeSinceLastWrite, maxQueueCache, timeBetweenChecks, maxFileSize, location,
+                maxLogCount)
+        {
+            _queue = new ConcurrentQueue<LogItem>();
+            OnLogWritten += DefaultLogWriter;
+            BeginLogWriter();
+        }
+
         #endregion
 
 
         #region ILogAppender method implementations
 
-        public void Log(string message, Exception exception, LoggingLevel level)
+        public override void Log(string message, Exception exception, LoggingLevel level)
         {
             _queue.Enqueue(new LogItem(message, exception, level));
         }
+
+        
 
         #endregion
 
@@ -132,7 +152,7 @@ namespace NLogger.Appenders
             do
             {
                 Thread.Sleep(TimeBetweenChecks);
-                if (_queue.Count < MaxQueueCache && (DateTime.Now - _lastWrite) < TimeSinceLastWrite) continue;
+                if ((_queue.Count < MaxQueueCache && (DateTime.Now - _lastWrite) < TimeSinceLastWrite) || _queue.Count == 0) continue;
                 if (OnLogWritten == null) continue;
                 var logItems = new List<LogItem>();
                 for (var i = 0; i < _queue.Count; i++)
@@ -154,9 +174,9 @@ namespace NLogger.Appenders
 
 
 
-        private void DefaultLogWriter(IList<LogItem> logItems)
+        private new void DefaultLogWriter(IList<LogItem> logItems)
         {
-            
+            base.DefaultLogWriter(logItems);
             if (!string.IsNullOrWhiteSpace(MaxFileSize))
             {
                 var result = Regex.Match(MaxFileSize, @"\d+").Value;
@@ -207,6 +227,7 @@ namespace NLogger.Appenders
 
             try
             {
+                if (logItems.Count == 0) return;
                 using (
                     var fs = new FileStream(Location, FileMode.Append, FileAccess.Write, FileShare.Write, 256,
                                             FileOptions.WriteThrough))
@@ -217,10 +238,10 @@ namespace NLogger.Appenders
 // ReSharper restore ForCanBeConvertedToForeach
                         {
                             var toWrite = string.Format("{0}",
-                                                            Logger.FormatLog(
-                                                                string.IsNullOrEmpty(LogPattern)
-                                                                    ? DefaultLogPattern
-                                                                    : LogPattern, logItems[i], _formatting));
+                                                        Logger.FormatLog(
+                                                            string.IsNullOrEmpty(LogPattern)
+                                                                ? DefaultLogPattern
+                                                                : LogPattern, logItems[i], _formatting));
                             fw.WriteLine(toWrite);
                         }
                     fs.Flush(true);
@@ -232,6 +253,10 @@ namespace NLogger.Appenders
                     throw;
                 Thread.Sleep(2000);
                 DefaultLogWriter(logItems);
+            }
+            catch (ArgumentNullException)
+            {
+                
             }
         }
 

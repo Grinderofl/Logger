@@ -3,8 +3,14 @@ using System.Collections.Generic;
 
 namespace NLogger.Appenders
 {
+    /// <summary>
+    /// LogAppender interface
+    /// </summary>
     public interface ILogAppender : ILoggerBase, IDisposable
     {
+        /// <summary>
+        /// Appender name
+        /// </summary>
         string Name { get; set; }
 
         /// <summary>
@@ -42,12 +48,24 @@ namespace NLogger.Appenders
         /// </summary>
         int TimeBetweenChecks { get; set; }
 
+        /// <summary>
+        /// Maximum allowed log file size / database size / whatever size
+        /// </summary>
         string MaxFileSize { get; set; }
 
+        /// <summary>
+        /// Location for log file
+        /// </summary>
         string Location { get; set; }
 
+        /// <summary>
+        /// Maximum number of logs kept as backup
+        /// </summary>
         int MaxLogCount { get; set; }
 
+        /// <summary>
+        /// Log is being written
+        /// </summary>
         event Logger.LogWritten OnLogWritten;
     }
 }
