@@ -82,7 +82,7 @@ namespace NLogger
             if(config == null)
                 config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
 
-            if(config == null) throw new ConfigurationErrorsException("No configuration section found");
+            if (config == null) return null;
             if (config.Root != null)
                 Root.LoggingLevels = GetLoggingLevels(config.Root);
 
