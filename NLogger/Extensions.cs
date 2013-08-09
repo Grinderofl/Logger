@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NLogger
 {
-    public static class LoggerExtensions
+    internal static class LoggerExtensions
     {
         public static bool Contains(this LoggingLevel[] levels, LoggingLevel level)
         {

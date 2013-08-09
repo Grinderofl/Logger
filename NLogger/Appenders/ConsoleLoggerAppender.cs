@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace NLogger.Appenders
 {
+    /// <summary>
+    /// Console Logger Appender
+    /// </summary>
     public class ConsoleLoggerAppender : ILogAppender
     {
         public void Log(string message, Exception exception, LoggingLevel level)
@@ -33,6 +36,10 @@ namespace NLogger.Appenders
         public string MaxFileSize { get; set; }
         public string Location { get; set; }
         public int MaxLogCount { get; set; }
+
+        /// <summary>
+        /// Fired when log is written
+        /// </summary>
         public event Logger.LogWritten OnLogWritten;
     }
 }

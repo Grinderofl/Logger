@@ -37,10 +37,10 @@ namespace Tests
         #region Tests
 
         [Test]
-        public void LoggerQueueShouldBeIncreasedWithLogLevelSetToDebug()
+        public void LoggerQueueShouldNotBeIncreasedWithLogLevelSetToDebug()
         {
             _logger.Log("Logging a test case", LoggingLevel.Debug);
-            Assert.That(_logger.Queued, Is.EqualTo(1));
+            Assert.That(_logger.Queued, Is.EqualTo(0));
         }
 
         [Test]

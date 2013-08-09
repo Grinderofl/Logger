@@ -14,6 +14,9 @@ using System.Threading;
 
 namespace NLogger.Appenders
 {
+    /// <summary>
+    /// File Logger Appender
+    /// </summary>
     public class FileLoggerAppender : ILogAppender
     {
         #region Fields
@@ -57,17 +60,27 @@ namespace NLogger.Appenders
 
 
         #region Properties
-
+        
         public string Name { get; set; }
+
         public LoggingLevel[] LoggingLevels { get; set; }
+
         public long Queued { get { return _queue.Count; } }
+
         public string LogPattern { get; set; }
+
         public string Parameters { get; set; }
+
         public TimeSpan TimeSinceLastWrite { get; set; }
+
         public int MaxQueueCache { get; set; }
+
         public int TimeBetweenChecks { get; set; }
+        
         public string MaxFileSize { get; set; }
+        
         public string Location { get; set; }
+        
         public int MaxLogCount { get; set; }
 
         #endregion
@@ -75,6 +88,9 @@ namespace NLogger.Appenders
 
         #region Events
 
+        /// <summary>
+        /// Fired when log is written
+        /// </summary>
         public event Logger.LogWritten OnLogWritten;
 
         #endregion
@@ -82,6 +98,9 @@ namespace NLogger.Appenders
 
         #region Constructors and destructors
 
+        /// <summary>
+        /// Initializes a new FileLoggerAppender
+        /// </summary>
         public FileLoggerAppender()
         {
             MaxLogCount = -1;
@@ -91,7 +110,6 @@ namespace NLogger.Appenders
             _queue = new ConcurrentQueue<LogItem>();
             OnLogWritten += DefaultLogWriter;
             BeginLogWriter();
-            EventLogWriter.Log("FileLoggerAppender created", EventLogEntryType.Information, 0);
         }
 
         #endregion
@@ -158,7 +176,7 @@ namespace NLogger.Appenders
 
         private void DefaultLogWriter(IList<LogItem> logItems)
         {
-            
+            if (string.IsNullOrWhiteSpace(Location)) return;
             if (!string.IsNullOrWhiteSpace(MaxFileSize))
             {
                 var result = Regex.Match(MaxFileSize, @"\d+").Value;
@@ -218,8 +236,6 @@ namespace NLogger.Appenders
 
             try
             {
-                if (string.IsNullOrWhiteSpace(Location)) return;
-                Debug.Assert(Location != null, "Location is null");
                 if (!Directory.Exists(Path.GetDirectoryName(Location)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(Location));
@@ -230,7 +246,7 @@ namespace NLogger.Appenders
                 {
                     using (var fw = new StreamWriter(fs, new UTF8Encoding(), 256, true))
 // ReSharper disable ForCanBeConvertedToForeach Reason: Optimization
-                        for (int i = 0; i < logItems.Count; i++)
+                        for (var i = 0; i < logItems.Count; i++)
 // ReSharper restore ForCanBeConvertedToForeach
                         {
                             var toWrite = string.Format("{0}",

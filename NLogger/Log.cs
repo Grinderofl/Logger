@@ -2,8 +2,14 @@
 
 namespace NLogger
 {
+    /// <summary>
+    /// Static class for logging
+    /// </summary>
     public static class Log
     {
+        /// <summary>
+        /// Instance of logger
+        /// </summary>
         public static readonly ILogger Instance;
 
         static Log()
@@ -137,31 +143,61 @@ namespace NLogger
         }
 
 
+        /// <summary>
+        /// Logs a fatal message with format arguments
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="args">Message arguments</param>
         public static void FatalFormat(string message, params object[] args)
         {
             Fatal(string.Format(message, args));
         }
 
+        /// <summary>
+        /// Logs an error message with format arguments
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="args">Message arguments</param>
         public static void ErrorFormat(string message, params object[] args)
         {
             Error(string.Format(message, args));
         }
 
+        /// <summary>
+        /// Logs a warning message with format arguments
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="args">Message arguments</param>
         public static void WarningFormat(string message, params object[] args)
         {
             Warning(string.Format(message, args));
         }
 
+        /// <summary>
+        /// Logs a debug message with format arguments
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="args">Message arguments</param>
         public static void DebugFormat(string message, params object[] args)
         {
             Debug(string.Format(message, args));
         }
 
+        /// <summary>
+        /// Logs an info message with format arguments
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="args">Message arguments</param>
         public static void InfoFormat(string message, params object[] args)
         {
             Info(string.Format(message, args));
         }
 
+        /// <summary>
+        /// Logs a trace message with format arguments
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="args">Message arguments</param>
         public static void TraceFormat(string message, params object[] args)
         {
             Trace(string.Format(message, args));

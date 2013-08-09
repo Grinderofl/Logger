@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace NLogger
 {
+    /// <summary>
+    /// Log item
+    /// </summary>
     public class LogItem
     {
+        /// <summary>
+        /// Initializes a new LogItem class
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="exception">Exception to log</param>
+        /// <param name="level">Message level</param>
         public LogItem(string message, Exception exception = null, LoggingLevel level = LoggingLevel.Info)
         {
             Message = message;

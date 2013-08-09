@@ -2,6 +2,9 @@ using System.Configuration;
 
 namespace NLogger.Configuration
 {
+    /// <summary>
+    /// Appender configuration section
+    /// </summary>
     public class NLoggerAppenderCollection : ConfigurationElementCollection
     {
         private const string CollectionElementName = "appender";

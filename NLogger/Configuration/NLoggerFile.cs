@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace NLogger.Configuration
 {
+    /// <summary>
+    /// Logger file configuration
+    /// </summary>
     public class NLoggerFile : ConfigurationElement
     {
+        /// <summary>
+        /// File location
+        /// </summary>
         [ConfigurationProperty("location")]
         public string Location
         {
@@ -16,6 +22,9 @@ namespace NLogger.Configuration
             set { this["location"] = value; }
         }
 
+        /// <summary>
+        /// Maximum allowed file size before creating a new file
+        /// </summary>
         [ConfigurationProperty("maxsize")]
         public string MaxSize
         {
@@ -23,6 +32,9 @@ namespace NLogger.Configuration
             set { this["maxsize"] = value; }
         }
 
+        /// <summary>
+        /// Maximum number of logs to keep
+        /// </summary>
         [ConfigurationProperty("maxcount")]
         public int MaxCount
         {

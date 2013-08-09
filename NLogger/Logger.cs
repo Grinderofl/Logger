@@ -8,6 +8,9 @@ using NLogger.Configuration;
 
 namespace NLogger
 {
+    /// <summary>
+    /// Logger implementation
+    /// </summary>
     public class Logger : ILogger
     {
 
@@ -65,10 +68,17 @@ namespace NLogger
             return format;
         }
 
+        /// <summary>
+        /// Log Written delegated
+        /// </summary>
+        /// <param name="logItems">Log items</param>
         public delegate void LogWritten(IList<LogItem> logItems);
 
         #region Constructors and destructors
 
+        /// <summary>
+        /// Initializes a new Logger class
+        /// </summary>
         public Logger()
         {
             Root = new RootAppender();

@@ -2,8 +2,14 @@ using System.Configuration;
 
 namespace NLogger.Configuration
 {
+    /// <summary>
+    /// Appender levels definition
+    /// </summary>
     public class NLoggerAppenderLevel : ConfigurationElement
     {
+        /// <summary>
+        /// Log fatal messages
+        /// </summary>
         [ConfigurationProperty("fatal")]
         public bool Fatal
         {
@@ -11,6 +17,9 @@ namespace NLogger.Configuration
             set { this["fatal"] = value; }
         }
 
+        /// <summary>
+        /// Log error messages
+        /// </summary>
         [ConfigurationProperty("error")]
         public bool Error
         {
@@ -18,6 +27,9 @@ namespace NLogger.Configuration
             set { this["error"] = value; }
         }
 
+        /// <summary>
+        /// Log warning messages
+        /// </summary>
         [ConfigurationProperty("warning")]
         public bool Warning
         {
@@ -25,6 +37,9 @@ namespace NLogger.Configuration
             set { this["warning"] = value; }
         }
 
+        /// <summary>
+        /// Log info messages
+        /// </summary>
         [ConfigurationProperty("info")]
         public bool Info
         {
@@ -32,6 +47,9 @@ namespace NLogger.Configuration
             set { this["info"] = value; }
         }
 
+        /// <summary>
+        /// Log debug messages
+        /// </summary>
         [ConfigurationProperty("debug")]
         public bool Debug
         {
@@ -39,6 +57,9 @@ namespace NLogger.Configuration
             set { this["debug"] = value; }
         }
 
+        /// <summary>
+        /// Log trace messages
+        /// </summary>
         [ConfigurationProperty("trace")]
         public bool Trace
         {

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace NLogger.Appenders
 {
+    /// <summary>
+    /// Memory Logger Appender
+    /// </summary>
     public class MemoryLoggerAppender : ILogAppender
     {
 
@@ -27,6 +30,9 @@ namespace NLogger.Appenders
         public string Location { get; set; }
         public int MaxLogCount { get; set; }
 
+        /// <summary>
+        /// Fired when log is written
+        /// </summary>
         public event Logger.LogWritten OnLogWritten;
 
         #endregion
@@ -34,6 +40,9 @@ namespace NLogger.Appenders
 
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new class of MemoryLoggerAppender
+        /// </summary>
         public MemoryLoggerAppender()
         {
             _queue = new Queue<LogItem>();

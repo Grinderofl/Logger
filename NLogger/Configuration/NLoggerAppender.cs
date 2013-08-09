@@ -2,6 +2,9 @@ using System.Configuration;
 
 namespace NLogger.Configuration
 {
+    /// <summary>
+    /// Generic logger appender configuration element
+    /// </summary>
     public class NLoggerAppender : RootAppender
     {
         /// <summary>
@@ -34,6 +37,9 @@ namespace NLogger.Configuration
             set { this["parameters"] = value; }
         }
 
+        /// <summary>
+        /// Appender file options
+        /// </summary>
         [ConfigurationProperty("file", IsRequired = false)]
         public NLoggerFile File
         {
@@ -41,6 +47,9 @@ namespace NLogger.Configuration
             set { this["file"] = value; }
         }
 
+        /// <summary>
+        /// Maximum time allowed between writes even if queue is not long enough
+        /// </summary>
         [ConfigurationProperty("timesincelastwrite")]
         public string TimeSinceLastWrite
         {
@@ -48,6 +57,9 @@ namespace NLogger.Configuration
             set { this["timesincelastwrite"] = value; }
         }
 
+        /// <summary>
+        /// Maximum allowed queue size before a write occurs
+        /// </summary>
         [ConfigurationProperty("maxqueuesize")]
         public int MaxQueueSize
         {
@@ -55,6 +67,9 @@ namespace NLogger.Configuration
             set { this["maxqueuesize"] = value; }
         }
 
+        /// <summary>
+        /// Time between queue checks
+        /// </summary>
         [ConfigurationProperty("timebetweenchecks")]
         public int TimeBetweenChecks
         {

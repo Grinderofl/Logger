@@ -12,7 +12,7 @@ namespace NLogger
     {
         private const string Source = "NLogger";
         private const string LogName = "Application";
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
 
         public static void Log(string message, EventLogEntryType type, int id)
         {

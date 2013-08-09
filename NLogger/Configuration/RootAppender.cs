@@ -2,6 +2,9 @@ using System.Configuration;
 
 namespace NLogger.Configuration
 {
+    /// <summary>
+    /// Root appender
+    /// </summary>
     public class RootAppender : ConfigurationElement
     {
         /// <summary>
