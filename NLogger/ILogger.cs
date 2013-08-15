@@ -36,7 +36,8 @@ namespace NLogger
         /// Initializes the class and loads settings from configuration file
         /// </summary>
         /// <param name="configurationSection">Custom configuration section</param>
-        ILogger Initialize(NLoggerConfigurationSection configurationSection = null);
+        /// <param name="ignoreConfigurationSection">Ignore configuration section</param>
+        ILogger Initialize(NLoggerConfigurationSection configurationSection = null, bool ignoreConfigurationSection = false);
 
 
         /// <summary>

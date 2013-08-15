@@ -87,12 +87,12 @@ namespace NLogger
 
         #endregion
 
-        public ILogger Initialize(NLoggerConfigurationSection config = null)
+        public ILogger Initialize(NLoggerConfigurationSection config = null, bool ignoreConfigurationSection = false)
         {
-            if(config == null)
+            if(config == null && !ignoreConfigurationSection)
                 config = ConfigurationManager.GetSection("NLoggerConfiguration") as NLoggerConfigurationSection;
 
-            if (config == null) return null;
+            if (config == null) return this;
             if (config.Root != null)
                 Root.LoggingLevels = GetLoggingLevels(config.Root);
 
