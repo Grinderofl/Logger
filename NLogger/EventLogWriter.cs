@@ -12,7 +12,7 @@ namespace NLogger
     {
         private const string Source = "NLogger";
         private const string LogName = "Application";
-        private static readonly object _lock = new object();
+        private static readonly object Lock = new object();
 
         public static void Log(string message, EventLogEntryType type, int id)
         {
@@ -20,12 +20,17 @@ namespace NLogger
                 EventLog.CreateEventSource(Source, LogName);
 
             EventLog.WriteEntry(Source, message, type, id);*/
-            lock (_lock)
+            try
             {
-                File.AppendAllText("NLoggerErrors.log",
-                                   string.Format("[{0}] {1} | {4} | {2}{3}", type, id, message, Environment.NewLine,
-                                                 DateTime.Now));
+                lock (Lock)
+                {
+                    File.AppendAllText("NLoggerErrors.log",
+                                       string.Format("[{0}] {1} | {4} | {2}{3}", type, id, message, Environment.NewLine,
+                                                     DateTime.Now));
+                }
             }
+            catch(Exception e)
+            {}
         }
 
     }
