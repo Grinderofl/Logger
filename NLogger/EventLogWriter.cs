@@ -24,13 +24,19 @@ namespace NLogger
             {
                 lock (Lock)
                 {
-                    File.AppendAllText("NLoggerErrors.log",
+                    File.AppendAllText(GetFileName(),
                                        string.Format("[{0}] {1} | {4} | {2}{3}", type, id, message, Environment.NewLine,
                                                      DateTime.Now));
                 }
             }
             catch(Exception e)
             {}
+        }
+
+        private static string GetFileName()
+        {
+            var time = Process.GetCurrentProcess().StartTime;
+            return string.Format("NLoggerErrors-{0}.log", time.ToString("yyyy-MM-dd_HH-mm-ss"));
         }
 
     }

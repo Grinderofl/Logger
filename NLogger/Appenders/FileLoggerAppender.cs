@@ -63,7 +63,7 @@ namespace NLogger.Appenders
         
         public string Name { get; set; }
 
-        public LoggingLevel[] LoggingLevels { get; set; }
+        public List<LoggingLevel> LoggingLevels { get; set; }
 
         public long Queued { get { return _queue.Count; } }
 
@@ -103,6 +103,7 @@ namespace NLogger.Appenders
         /// </summary>
         public FileLoggerAppender()
         {
+            LoggingLevels = new List<LoggingLevel>();
             MaxLogCount = -1;
             TimeSinceLastWrite = new TimeSpan(0, 0, 30);
             TimeBetweenChecks = 30;
@@ -176,9 +177,12 @@ namespace NLogger.Appenders
 
         private void DefaultLogWriter(IList<LogItem> logItems)
         {
+            //EventLogWriter.Log("Entering default log writer", EventLogEntryType.Information, 100);
             if (string.IsNullOrWhiteSpace(Location)) return;
+
             if (!string.IsNullOrWhiteSpace(MaxFileSize))
             {
+                //EventLogWriter.Log("Max file size is not null or whitespace", EventLogEntryType.Information, 101);
                 var result = Regex.Match(MaxFileSize, @"\d+").Value;
                 long size;
                 if (long.TryParse(result, out size))
@@ -190,16 +194,22 @@ namespace NLogger.Appenders
                         size *= element.Value;
                         break;
                     }
+                    //EventLogWriter.Log("Max file size is: " + size, EventLogEntryType.Information, 102);
                     try
                     {
+                        //EventLogWriter.Log("Entering try block", EventLogEntryType.Information, 103);
                         if (File.Exists(Location))
                         {
                             var info = new FileInfo(Location);
+                            //EventLogWriter.Log("File exists, file size is:" + info.Length, EventLogEntryType.Information, 104);
                             if (info.Length >= size)
                             {
-                                File.SetLastWriteTime(Location, DateTime.Now);
+                                //EventLogWriter.Log("File size is greater than max", EventLogEntryType.Information, 105);
+                                //File.SetLastWriteTime(Location, DateTime.Now);
                                 var move = DateTime.Now;
-                                info.MoveTo(Location + "." + move.ToString("yyyy/dd/MM_HH-mm-ss.fffffff"));
+                                //EventLogWriter.Log("Attempting to move to: " + Location, EventLogEntryType.Information, 106);
+                                var loc = Location + "." + move.ToString("yyyy-dd-MM_HH-mm-ss_fffffff");
+                                info.MoveTo(loc);
                                 if (MaxLogCount != -1)
                                 {
                                     var directory = Path.GetDirectoryName(Location);
@@ -241,7 +251,7 @@ namespace NLogger.Appenders
                     Directory.CreateDirectory(Path.GetDirectoryName(Location));
                 }
                 using (
-                    var fs = new FileStream(Location, FileMode.Append, FileAccess.Write, FileShare.Write, 256,
+                    var fs = new FileStream(Location, FileMode.Append, FileAccess.Write, FileShare.ReadWrite, 256,
                                             FileOptions.WriteThrough))
                 {
                     using (var fw = new StreamWriter(fs, new UTF8Encoding(), 256, true))

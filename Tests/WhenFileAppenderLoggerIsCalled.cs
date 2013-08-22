@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NLogger;
 using NLogger.Appenders;
@@ -16,8 +17,8 @@ namespace Tests
         public void SetUp()
         {
             _logger = new Logger {DefaultLoggingLevel = LoggingLevel.Info};
-            _logger.Root.LoggingLevels = new[] { LoggingLevel.Debug };
-            var fileLogger = new FileLoggerAppender {LoggingLevels = new[] {LoggingLevel.Error}};
+            _logger.Root.LoggingLevels.Add(LoggingLevel.Debug);
+            var fileLogger = new FileLoggerAppender {LoggingLevels = new List<LoggingLevel>(new[] {LoggingLevel.Error})};
             _logger.Appenders.Add(fileLogger);
         }
 

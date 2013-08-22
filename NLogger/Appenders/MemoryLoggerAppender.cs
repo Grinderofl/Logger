@@ -19,7 +19,7 @@ namespace NLogger.Appenders
         #region Properties
 
         public string Name { get; set; }
-        public LoggingLevel[] LoggingLevels { get; set; }
+        public List<LoggingLevel> LoggingLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }
@@ -46,6 +46,7 @@ namespace NLogger.Appenders
         public MemoryLoggerAppender()
         {
             _queue = new Queue<LogItem>();
+            LoggingLevels = new List<LoggingLevel>();
         }
 
         #endregion

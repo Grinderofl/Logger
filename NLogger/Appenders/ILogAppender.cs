@@ -16,7 +16,7 @@ namespace NLogger.Appenders
         /// <summary>
         /// Logging level
         /// </summary>
-        LoggingLevel[] LoggingLevels { get; set; }
+        List<LoggingLevel> LoggingLevels { get; set; }
 
         /// <summary>
         /// Number of items in the log queue

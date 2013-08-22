@@ -152,7 +152,7 @@ namespace NLogger
 
             for (var i = 0; i < Appenders.Count; i++)
             {
-                if (Appenders[i].LoggingLevels.Length == 0)
+                if (Appenders[i].LoggingLevels.Count == 0)
                 {
                     if(rootlevel)
                         Appenders[i].Log(message, exception, level);
@@ -269,10 +269,10 @@ namespace NLogger
             return (LoggingLevel) Enum.Parse(typeof (LoggingLevel), value);
         }
 
-        private static LoggingLevel[] GetLoggingLevels(Configuration.RootAppender appender)
+        private static List<LoggingLevel> GetLoggingLevels(Configuration.RootAppender appender)
         {
             if (appender == null)
-                return new LoggingLevel[0];
+                return new List<LoggingLevel>();
             var list = new List<LoggingLevel>();
             if (appender.Level.Fatal)
                 list.Add(LoggingLevel.Fatal);
@@ -287,7 +287,7 @@ namespace NLogger
             if (appender.Level.Trace)
                 list.Add(LoggingLevel.Trace);
 
-            return list.ToArray();
+            return list;
         }
 
         #endregion

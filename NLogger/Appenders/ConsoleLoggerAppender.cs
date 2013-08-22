@@ -11,6 +11,10 @@ namespace NLogger.Appenders
     /// </summary>
     public class ConsoleLoggerAppender : ILogAppender
     {
+        public ConsoleLoggerAppender()
+        {
+            LoggingLevels = new List<LoggingLevel>();
+        }
         public void Log(string message, Exception exception, LoggingLevel level)
         {
             Console.WriteLine(Logger.FormatLog(string.IsNullOrEmpty(LogPattern) ? DefaultLogPattern : LogPattern, new LogItem(message, exception, level)));
@@ -26,7 +30,7 @@ namespace NLogger.Appenders
         private const string DefaultLogPattern = "[%date][%level] %message";
 
         public string Name { get; set; }
-        public LoggingLevel[] LoggingLevels { get; set; }
+        public List<LoggingLevel> LoggingLevels { get; set; }
         public long Queued { get { return 0; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }

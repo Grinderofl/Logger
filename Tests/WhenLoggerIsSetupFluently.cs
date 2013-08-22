@@ -21,7 +21,7 @@ namespace Tests
             var appender = new FileLoggerAppender()
                 {
                     Location = "C:\\logs\\log.log",
-                    LoggingLevels = new[] {LoggingLevel.Debug, LoggingLevel.Error, LoggingLevel.Fatal},
+                    LoggingLevels = new List<LoggingLevel>(new[] {LoggingLevel.Debug, LoggingLevel.Error, LoggingLevel.Fatal}),
                     MaxFileSize = "10000KB",
                     MaxLogCount = 5,
                     TimeBetweenChecks = 50,

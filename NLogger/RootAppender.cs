@@ -22,6 +22,7 @@ namespace NLogger
         public RootAppender()
         {
             _queue = new Queue<LogItem>();
+            LoggingLevels = new List<LoggingLevel>();
         }
 
         #endregion
@@ -33,7 +34,7 @@ namespace NLogger
         }
 
         public string Name { get; set; }
-        public LoggingLevel[] LoggingLevels { get; set; }
+        public List<LoggingLevel> LoggingLevels { get; set; }
         public long Queued { get { return _queue.Count; } }
         public string LogPattern { get; set; }
         public string Parameters { get; set; }

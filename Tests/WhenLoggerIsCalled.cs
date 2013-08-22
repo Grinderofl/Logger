@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Tests
             _logger = new Logger
                 {
                     DefaultLoggingLevel = LoggingLevel.Info,
-                    Root = {LoggingLevels = new[] {LoggingLevel.Debug}}
+                    Root = {LoggingLevels = new List<LoggingLevel>(new[] {LoggingLevel.Debug})}
                 };
         }
 
